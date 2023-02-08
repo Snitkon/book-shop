@@ -22,3 +22,38 @@
 	font-style: normal;
 }
 
+.header {
+    background-color: #effafc;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.basket {
+	margin-left: auto;
+	width: 80px;
+	height: 80px;
+}
+
+.title {
+    font-family: 'FoglihtenNo06';
+    color: #62cee8;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+}
+
+.postContainer {
+	background-color: #d5eff5;
+}
+
+.poster {
+	display: block;
+	margin: auto;
+	height: 50vh;
+}
