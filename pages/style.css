@@ -57,3 +57,11 @@
 	margin: auto;
 	height: 50vh;
 }
+
+.product-item_img-container {
+  width: 15rem;
+}
+
+.product-item_img {
+  width: inherit;
+}

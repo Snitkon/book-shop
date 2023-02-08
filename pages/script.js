@@ -1,10 +1,13 @@
+import { Book } from "../modules/card.js";
+
 // Read data books
 fetch("../assets/books.json")
   .then((response) => {
     return response.json();
   })
   .then((data) => {
-    console.log(data);
+    console.log(data)
+    renderCards(data);
   });
 
 
@@ -43,4 +46,28 @@ poster.src = "../assets/images/shelfs.jpeg";
 poster.classList.add('poster');
 postContainer.appendChild(poster);
 
+
 // Creat Main
+const main = document.createElement('main');
+main.classList.add('main');
+body.appendChild(main);
+
+const containerProduct = document.createElement('div');
+containerProduct.classList.add('containerProduct');
+main.appendChild(containerProduct);
+
+
+
+
+function renderCards(products) {
+  const result = products.reduce((prevValue, currValue) => {
+    const card = new Book(currValue);
+    const template = card.createCardTemplate();
+    return prevValue + template;
+  }, "");
+
+  if (containerProduct) {
+    containerProduct.innerHTML = result;
+  }
+}
+
