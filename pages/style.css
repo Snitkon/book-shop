@@ -1,67 +1,224 @@
 @font-face {
-	font-family: 'CCWallScrawler';
-	src: url('../assets/fonts/CCWallScrawler_Italic_Cyrillic.eot');
-	src: local('☺'), url('../assets/fonts/CCWallScrawler_Italic_Cyrillic.woff') format('woff'), url('../assets/fonts/CCWallScrawler_Italic_Cyrillic.ttf') format('truetype'), url('../assets/fonts/CCWallScrawler_Italic_Cyrillic.svg') format('svg');
-	font-weight: normal;
-	font-style: italic;
+  font-family: "CCWallScrawler";
+  src: url("../assets/fonts/CCWallScrawler_Italic_Cyrillic.eot");
+  src: local("☺"), url("../assets/fonts/CCWallScrawler_Italic_Cyrillic.woff") format("woff"),
+    url("../assets/fonts/CCWallScrawler_Italic_Cyrillic.ttf") format("truetype"),
+    url("../assets/fonts/CCWallScrawler_Italic_Cyrillic.svg") format("svg");
+  font-weight: normal;
+  font-style: italic;
 }
 
 @font-face {
-	font-family: 'F...VERMONT';
-	src: url('../assets/fonts/F__VERMONT.eot');
-	src: local('☺'), url('../assets/fonts/F__VERMONT.woff') format('woff'), url('../assets/fonts/F__VERMONT.ttf') format('truetype'), url('../assets/fonts/F__VERMONT.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
+  font-family: "F...VERMONT";
+  src: url("../assets/fonts/F__VERMONT.eot");
+  src: local("☺"), url("../assets/fonts/F__VERMONT.woff") format("woff"), url("../assets/fonts/F__VERMONT.ttf") format("truetype"),
+    url("../assets/fonts/F__VERMONT.svg") format("svg");
+  font-weight: normal;
+  font-style: normal;
 }
 
 @font-face {
-	font-family: 'FoglihtenNo06';
-	src: url('../assets/fonts/foglihtenno06.eot');
-	src: local('☺'), url('../assets/fonts/foglihtenno06.woff') format('woff'), url('../assets/fonts/foglihtenno06.ttf') format('truetype'), url('../assets/fonts/foglihtenno06.svg') format('svg');
-	font-weight: normal;
-	font-style: normal;
+  font-family: "FoglihtenNo06";
+  src: url("../assets/fonts/foglihtenno06.eot");
+  src: local("☺"), url("../assets/fonts/foglihtenno06.woff") format("woff"),
+    url("../assets/fonts/foglihtenno06.ttf") format("truetype"), url("../assets/fonts/foglihtenno06.svg") format("svg");
+  font-weight: normal;
+  font-style: normal;
 }
 
 .header {
-    background-color: #effafc;
+  background-color: #effafc;
 }
 
 .container {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.basketContainer {
+  position: relative;
+  margin-left: auto;
+  width: 80px;
+  height: 80px;
 }
 
 .basket {
-	margin-left: auto;
-	width: 80px;
-	height: 80px;
+  position: absolute;
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  background-color: rgb(169, 169, 169);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
 
 .title {
-    font-family: 'FoglihtenNo06';
-    color: #62cee8;
+  font-family: "FoglihtenNo06";
+  color: #62cee8;
 }
 
 .logo {
-    width: 80px;
-    height: 80px;
+  width: 80px;
+  height: 80px;
 }
 
 .postContainer {
-	background-color: #d5eff5;
+  background-color: #d5eff5;
 }
 
 .poster {
-	display: block;
-	margin: auto;
-	height: 50vh;
+  display: block;
+  margin: auto;
+  height: 50vh;
 }
 
-.product-item_img-container {
+.booksContainer {
+  padding-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+/* Book card */
+.book-item {
+  padding: 5px;
+  width: 18rem;
+  border: 2px solid #d5eff5;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.book-item_title {
+  font-family: "FoglihtenNo06";
+  text-align: center;
+}
+
+.book-item_price {
+  font-size: 24px;
+  color: #333;
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.book-item_img-container {
   width: 15rem;
 }
 
-.product-item_img {
+.book-item_img {
   width: inherit;
+}
+
+.book-btn-show,
+.book-btn-add {
+  font-family: "FoglihtenNo06";
+  margin-top: 15px;
+  padding: 10px 15px;
+  border: 1px solid #bae7f0;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  background-color: cadetblue;
+}
+
+/* Book card popup */
+.popup {
+  background: transparent;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: none;
+}
+
+.popup-close {
+  position: relative;
+  left: 100%;
+  width: 52px;
+  height: 52px;
+  border: 2px solid rgba(241, 205, 179, 1);
+  border-radius: 50%;
+  background: transparent;
+}
+
+.popup-container {
+  width: 900px;
+  min-height: 500px;
+  background: rgba(250, 250, 250, 1);
+  display: flex;
+  flex-direction: row;
+  border-radius: 10px;
+}
+
+.popup-overlay:hover {
+  cursor: pointer;
+}
+
+.popup-title {
+  padding-bottom: 10px;
+  color: #000000;
+}
+
+.popup-subtitle {
+  padding-bottom: 40px;
+  font-family: var(--font-title);
+  font-size: 20px;
+  line-height: 23px;
+  letter-spacing: 0.06em;
+}
+
+.popup-information {
+  padding-bottom: 40px;
+  font-family: var(--font-title);
+  font-size: 15px;
+  line-height: 17px;
+  letter-spacing: 0.06em;
+}
+
+.popup-list {
+  list-style: disc;
+  list-style-position: inside;
+  color: rgba(241, 205, 179, 1);
+}
+
+.popup-item {
+  padding-bottom: 10px;
+  font-family: var(--font-title);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 17px;
+  letter-spacing: 0.06em;
+  font-family: Georgia;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 17px;
+  letter-spacing: 0.06em;
+}
+
+.lock {
+  overflow: hidden;
+}
+
+.active {
+  display: block;
+}
+
+._active {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(41, 41, 41, 0.6);
+  z-index: 1;
 }
