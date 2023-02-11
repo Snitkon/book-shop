@@ -1,78 +1,82 @@
 import { Book } from "../modules/card.js";
-import { Cart } from "../modules/cart.js";
+import { Cart, CartWindow } from "../modules/cart.js";
 
 // Read data books
-fetch('../assets/books.json')
-.then((response) => {
-  return response.json();
-})
-.then((data) => {
-  console.log(data);
-  renderBooks(data);
-})
-
+fetch("../assets/books.json")
+  .then((response) => {
+    return response.json();
+  })
+  .then((data) => {
+    console.log(data);
+    renderBooks(data);
+  });
 
 // Creat Header
 const body = document.body;
 
-const header = document.createElement('header');
-header.classList.add('header');
+const header = document.createElement("header");
+header.classList.add("header");
 body.appendChild(header);
 
-const container = document.createElement('div');
-container.classList.add('container');
+const container = document.createElement("div");
+container.classList.add("container");
 header.appendChild(container);
 
-const logo = document.createElement('img');
-logo.src = '../assets/images/Books Logo.jpg';
-logo.classList.add('logo');
+const logo = document.createElement("img");
+logo.src = "../assets/images/Books Logo.jpg";
+logo.classList.add("logo");
 container.appendChild(logo);
 
-const titlePage = document.createElement('h1');
-titlePage.classList.add('title');
-titlePage.innerText = 'Lukovka Store';
+const titlePage = document.createElement("h1");
+titlePage.classList.add("title");
+titlePage.innerText = "Lukovka Store";
 container.appendChild(titlePage);
 
-const basketContainer = document.createElement('div');
-basketContainer.classList.add('basketContainer');
-container.appendChild(basketContainer)
+const basketContainer = document.createElement("div");
+basketContainer.classList.add("basketContainer");
+container.appendChild(basketContainer);
 
-const basket = document.createElement('img');
-basket.classList.add('basket');
-basket.src = '../assets/images/bag.svg';
+const basket = document.createElement("img");
+basket.classList.add("basket");
+basket.src = "../assets/images/bag.svg";
 basketContainer.appendChild(basket);
 
-const amount = document.createElement('span');
-amount.classList.add('amount');
-basketContainer.appendChild(amount)
+const amount = document.createElement("span");
+amount.classList.add("amount");
+basketContainer.appendChild(amount);
 
-const postContainer = document.createElement('div');
-postContainer.classList.add('postContainer');
+const cartWindow = document.createElement("div");
+cartWindow.classList.add("cart-window");
+container.appendChild(cartWindow);
+
+const cartWindowWrapper = document.createElement("div");
+cartWindowWrapper.classList.add("cart-window_wrapper");
+cartWindow.appendChild(cartWindowWrapper);
+
+const postContainer = document.createElement("div");
+postContainer.classList.add("postContainer");
 header.appendChild(postContainer);
 
-const poster = document.createElement('img');
-poster.src = '../assets/images/shelfs.jpeg';
-poster.classList.add('poster');
+const poster = document.createElement("img");
+poster.src = "../assets/images/shelfs.jpeg";
+poster.classList.add("poster");
 postContainer.appendChild(poster);
 
-
 // Creat Main
-const main = document.createElement('main');
-main.classList.add('main');
+const main = document.createElement("main");
+main.classList.add("main");
 body.appendChild(main);
 
-const booksList = document.createElement('div');
+const booksList = document.createElement("div");
 booksList.classList.add("booksContainer");
 main.appendChild(booksList);
-
-
 
 function renderBooks(products) {
   const result = products.reduce((prevValue, currValue) => {
     const book = new Book(currValue);
     const template = book.createBookTemplate();
     return prevValue + template;
-  }, '');
+  }, "");
 
   if (booksList) {
     booksList.innerHTML = result;
@@ -80,25 +84,24 @@ function renderBooks(products) {
 }
 
 // Book card popup
-const createPopupOverlay = document.createElement('div');
+const createPopupOverlay = document.createElement("div");
 createPopupOverlay.classList.add("popup-overlay");
-body.appendChild(createPopupOverlay)
+body.appendChild(createPopupOverlay);
 
-const createPopup = document.createElement('div');
-createPopup.classList.add('popup');
-body.appendChild(createPopup)
+const createPopup = document.createElement("div");
+createPopup.classList.add("popup");
+body.appendChild(createPopup);
 
-const createBtnPopupClose = document.createElement('button');
-createBtnPopupClose.classList.add('popup-close');
+const createBtnPopupClose = document.createElement("button");
+createBtnPopupClose.classList.add("popup-close");
 createPopup.appendChild(createBtnPopupClose);
 
-const createPopupWrapper = document.createElement('div');
-createPopupWrapper.classList.add('popup-wrapper');
-createPopup.appendChild(createPopupWrapper)
-
+const createPopupWrapper = document.createElement("div");
+createPopupWrapper.classList.add("popup-wrapper");
+createPopup.appendChild(createPopupWrapper);
 
 const popup = document.querySelector(".popup");
-const popupContainer = popup.querySelector(".popup-wrapper");
+const popupWrapper = popup.querySelector(".popup-wrapper");
 const booksContainer = document.querySelector(".booksContainer");
 const btnClose = popup.querySelector(".popup-close");
 const popupOverlay = document.querySelector(".popup-overlay");
@@ -111,7 +114,6 @@ function openPopup() {
   popupOverlay.classList.add("_active");
   popup.classList.add("active");
 }
-
 
 booksContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("book-btn-show")) {
@@ -126,7 +128,7 @@ booksContainer.addEventListener("click", (event) => {
       <p class="popup-description">${bookInfo.description}</p>
     </div>
 `;
-    popupContainer.innerHTML = pagePopup;
+    popupWrapper.innerHTML = pagePopup;
   }
 });
 
@@ -146,7 +148,6 @@ popupOverlay.addEventListener("mouseenter", (event) => {
 popupOverlay.addEventListener("mouseleave", (event) => {
   btnClose.classList.remove("hover");
 });
-
 
 //Cart
 const cart = new Cart();
@@ -174,12 +175,45 @@ amountItems.innerText = "0";
 //     }
 // });
 
-
-booksContainer.addEventListener('click', (event) => {
+booksContainer.addEventListener("click", (event) => {
   const btn = event.target;
-  if(btn && btn.classList.contains("book-btn-add")) {
-    const id = btn.parentElement.getAttribute("id")
-    const book = arrBook[id - 1]
-    cart.putItem(book)
+  if (btn && btn.classList.contains("book-btn-add")) {
+    const id = btn.parentElement.getAttribute("id");
+    const book = arrBook[id - 1];
+    cart.putItem(book);
+    let count = 0;
+    cart.itemsList.forEach((item) => {
+      count += item.quantity;
+    });
+    amountItems.innerHTML = count.toString();
   }
-})
+});
+
+//Cart window
+const cartWrapper = document.querySelector(".cart-window_wrapper");
+
+function openCart() {
+  body.classList.add("lock_cart");
+  cartWindow.classList.add("open_cart");
+}
+
+basketContainer.addEventListener("click", (event) => {
+  const btnBasket = event.target;
+  if (btnBasket.classList.contains("basket")) {
+    openCart()
+    let cartDataNew = cart.itemsList; //change structure date for save local storage
+    let result = cartDataNew.reduce((prevValue, currValue) => {
+      const cartWindowBook = new CartWindow(currValue);
+      const template = cartWindowBook.createCartWindowTemplate();
+      return prevValue + template;
+    }, "");
+    if (cartWrapper) {
+      cartWrapper.innerHTML = result;
+    }
+  }
+});
+
+function cloaseCart() {
+    body.classList.remove("lock_cart");
+    cartWindow.classList.remove("open_cart");
+}
