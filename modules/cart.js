@@ -28,7 +28,6 @@
 //   }
 // }
 
-
 export class CartWindow {
   cartData;
 
@@ -38,10 +37,18 @@ export class CartWindow {
 
   createCartWindowTemplate() {
     return `
-    <div class="cart-window_container">
+    <div class="cart-window_container" id="${this.cartData.id}">
+     <div class="cart-window_img__container">
+      <img class="cart-window_img" src="${this.cartData.imageLink}"
+      alt="${this.cartData.title}">
+     </div>
       <h3 class="cart-window_title">${this.cartData.title}</h3>
-      <p class="cart-window_description">${this.cartData.description}</p>
-      <p class="cart-window_quantity"><input name="textfield" type="text" value="${this.cartData.quantity}"></p>
+      <p class="cart-window_author">${this.cartData.author}</p>
+      <button class="minus">&#8722</button>
+      <p class="cart-window_quantity">${this.cartData.quantity}</p>
+      <button class="plus">&#43</button>
+      <p class="cart-window_price">${this.cartData.price * this.cartData.quantity}$</p>
+      <button class="delete">&#65794</button>
     </div>
     `;
   }
@@ -68,6 +75,19 @@ export class Cart {
       value.quantity = 1;
     }
     localStorage.setItem(this.keyName, JSON.stringify(this.itemsList));
+  }
+
+  removeItem(value) {
+    const indexElement = this.itemsList.indexOf(value);
+    if (indexElement != -1) {
+      let element = this.itemsList[indexElement];
+      if (element.quantity >= 2) {
+        element.quantity -= 1
+      } else {
+        this.itemsList.splice(indexElement, 1)
+      }
+    }
+    localStorage.setItem(this.keyName, JSON.stringify(this.itemsList))
   }
 
   getItem() {
@@ -103,4 +123,3 @@ export class Cart {
   //   localStorage.setItem(this.keyName, JSON.stringify(this.itemsList));
   // }
 }
-

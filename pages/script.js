@@ -8,68 +8,68 @@ fetch("../assets/books.json")
   })
   .then((data) => {
     console.log(data);
+    let arr = data;
     renderBooks(data);
   });
-
 // Creat Header
 const body = document.body;
 
 const header = document.createElement("header");
 header.classList.add("header");
-body.appendChild(header);
+body.append(header);
 
 const container = document.createElement("div");
 container.classList.add("container");
-header.appendChild(container);
+header.append(container);
 
 const logo = document.createElement("img");
 logo.src = "../assets/images/Books Logo.jpg";
 logo.classList.add("logo");
-container.appendChild(logo);
+container.append(logo);
 
 const titlePage = document.createElement("h1");
 titlePage.classList.add("title");
 titlePage.innerText = "Lukovka Store";
-container.appendChild(titlePage);
+container.append(titlePage);
 
 const basketContainer = document.createElement("div");
 basketContainer.classList.add("basketContainer");
-container.appendChild(basketContainer);
+container.append(basketContainer);
 
 const basket = document.createElement("img");
 basket.classList.add("basket");
 basket.src = "../assets/images/bag.svg";
-basketContainer.appendChild(basket);
+basketContainer.append(basket);
 
 const amount = document.createElement("span");
 amount.classList.add("amount");
-basketContainer.appendChild(amount);
+basketContainer.append(amount);
 
 const cartWindow = document.createElement("div");
 cartWindow.classList.add("cart-window");
-container.appendChild(cartWindow);
+container.append(cartWindow);
 
 const cartWindowWrapper = document.createElement("div");
 cartWindowWrapper.classList.add("cart-window_wrapper");
-cartWindow.appendChild(cartWindowWrapper);
+cartWindow.append(cartWindowWrapper);
 
 const postContainer = document.createElement("div");
 postContainer.classList.add("postContainer");
-header.appendChild(postContainer);
+header.append(postContainer);
 
 const poster = document.createElement("img");
 poster.src = "../assets/images/shelfs.jpeg";
 poster.classList.add("poster");
-postContainer.appendChild(poster);
+postContainer.append(poster);
 
 // Creat Main
 const main = document.createElement("main");
 main.classList.add("main");
-body.appendChild(main);
+body.append(main);
 
 const booksList = document.createElement("div");
 booksList.classList.add("booksContainer");
-main.appendChild(booksList);
+main.append(booksList);
 
 function renderBooks(products) {
   const result = products.reduce((prevValue, currValue) => {
@@ -86,19 +86,19 @@ function renderBooks(products) {
 // Book card popup
 const createPopupOverlay = document.createElement("div");
 createPopupOverlay.classList.add("popup-overlay");
-body.appendChild(createPopupOverlay);
+body.append(createPopupOverlay);
 
 const createPopup = document.createElement("div");
 createPopup.classList.add("popup");
-body.appendChild(createPopup);
+body.append(createPopup);
 
 const createBtnPopupClose = document.createElement("button");
 createBtnPopupClose.classList.add("popup-close");
-createPopup.appendChild(createBtnPopupClose);
+createPopup.append(createBtnPopupClose);
 
 const createPopupWrapper = document.createElement("div");
 createPopupWrapper.classList.add("popup-wrapper");
-createPopup.appendChild(createPopupWrapper);
+createPopup.append(createPopupWrapper);
 
 const popup = document.querySelector(".popup");
 const popupWrapper = popup.querySelector(".popup-wrapper");
@@ -200,7 +200,7 @@ function openCart() {
 basketContainer.addEventListener("click", (event) => {
   const btnBasket = event.target;
   if (btnBasket.classList.contains("basket")) {
-    openCart()
+    openCart();
     let cartDataNew = cart.itemsList; //change structure date for save local storage
     let result = cartDataNew.reduce((prevValue, currValue) => {
       const cartWindowBook = new CartWindow(currValue);
@@ -214,6 +214,77 @@ basketContainer.addEventListener("click", (event) => {
 });
 
 function cloaseCart() {
-    body.classList.remove("lock_cart");
-    cartWindow.classList.remove("open_cart");
+  body.classList.remove("lock_cart");
+  cartWindow.classList.remove("open_cart");
 }
+
+//Drag and drop
+const books = document.querySelectorAll(".book-item");
+const cart_basket = document.querySelector(".basketContainer");
+
+cart_basket.ondragover = allowDrop;
+books.ondragover = allowDrop;
+
+function allowDrop(event) {
+  event.preventDefault();
+}
+
+cart_basket.ondrop = drop;
+books.ondrop = drop;
+
+books.forEach((book) => {
+  book.ondragstart = drag;
+});
+
+function drag(event) {
+  let target = event.target;
+  if (target.parentElement.parentElement.id || target.id) {
+    let bookID = target.parentElement.parentElement.id || target.id;
+    event.dataTransfer.setData("id", bookID);
+  }
+}
+
+function drop(event) {
+  let itemId = event.dataTransfer.getData("id");
+  let book = arrBook[itemId - 1];
+  cart.putItem(book);
+  let count = 0;
+  cart.itemsList.forEach((item) => {
+    count += item.quantity;
+  });
+  amountItems.innerHTML = count.toString();
+}
+
+// Minus button and plus button
+const cart_window = document.querySelector(".cart-window");
+
+cart_window.addEventListener("click", (event) => {
+  const price = document.querySelector(".cart-window_price");
+  let target = event.target;
+  let update_price;
+  let id_book;
+  let update_counter;
+  if (target && target.classList.contains("minus")) {
+    let counter = target.nextElementSibling;
+    id_book = target.parentElement.id;
+    let delete_book = arrBook[id_book - 1];
+    cart.removeItem(delete_book);
+    update_counter = delete_book.quantity;
+    counter.innerHTML = update_counter;
+    update_price = delete_book.price * delete_book.quantity;
+    price.innerHTML = `${update_price}$`;
+  }
+  if (target && target.classList.contains("plus")) {
+    let counter = target.previousElementSibling;
+    id_book = target.parentElement.id;
+    let add_book = arrBook[id_book - 1];
+    cart.putItem(add_book);
+    update_counter = add_book.quantity
+    counter.innerHTML = update_counter
+    update_price = add_book.price * add_book.quantity;
+    price.innerHTML = `${update_price}$`;
+  }
+  if (target && target.classList.contains("delete")) {
+    console.log("delete")
+  }
+});

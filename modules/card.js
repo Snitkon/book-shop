@@ -11,7 +11,7 @@ export class Book {
 
   createBookTemplate() {
     return `
-    <div class="book-item" id="${this.bookData.id}" data-name="${this.bookData.title}">
+    <div class="book-item" id="${this.bookData.id}" data-name="${this.bookData.title}" draggable="true">
      <h3 class="book-item_title">${this.bookData.title}</h3>
      <div class="book-item_img-container">
       <img class="book-item_img" src="${this.bookData.imageLink}"
