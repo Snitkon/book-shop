@@ -8,7 +8,6 @@ fetch("../assets/books.json")
   })
   .then((data) => {
     console.log(data);
-    let arr = data;
     renderBooks(data);
   });
 // Creat Header
@@ -45,14 +44,6 @@ const amount = document.createElement("span");
 amount.classList.add("amount");
 basketContainer.append(amount);
 
-const cartWindow = document.createElement("div");
-cartWindow.classList.add("cart-window");
-container.append(cartWindow);
-
-const cartWindowWrapper = document.createElement("div");
-cartWindowWrapper.classList.add("cart-window_wrapper");
-cartWindow.append(cartWindowWrapper);
-
 const postContainer = document.createElement("div");
 postContainer.classList.add("postContainer");
 header.append(postContainer);
@@ -83,6 +74,39 @@ function renderBooks(products) {
   }
 }
 
+// Creat Footer
+const footer = document.createElement("footer");
+footer.classList.add("footer");
+body.append(footer);
+
+const footer_container = document.createElement("div");
+footer_container.classList.add('footer_container');
+footer.append(footer_container);
+
+const footer_title = document.createElement("h2");
+footer_title.innerText = "Contact info"
+footer_title.classList.add("footer_title");
+footer_container.append(footer_title);
+
+const footer_info__container = document.createElement("div");
+footer_info__container.classList.add("footer_info__container");
+footer_container.append(footer_info__container);
+
+const footer_email = document.createElement("p");
+footer_email.innerText = "lukovka_store@yahoo.com";
+footer_email.classList.add("email");
+footer_info__container.append(footer_email)
+
+const footer_phone = document.createElement("p");
+footer_phone.innerText = "+1 212-473-1355";
+footer_info__container.append(footer_phone)
+footer_phone.classList.add("phone");
+
+const footer_location = document.createElement("p");
+footer_location.classList.add("location");
+footer_location.innerText = "828 Broadway, New York, NY 10003"
+footer_info__container.append(footer_location)
+
 // Book card popup
 const createPopupOverlay = document.createElement("div");
 createPopupOverlay.classList.add("popup-overlay");
@@ -103,7 +127,7 @@ createPopup.append(createPopupWrapper);
 const popup = document.querySelector(".popup");
 const popupWrapper = popup.querySelector(".popup-wrapper");
 const booksContainer = document.querySelector(".booksContainer");
-const btnClose = popup.querySelector(".popup-close");
+const btnClosePopup = popup.querySelector(".popup-close");
 const popupOverlay = document.querySelector(".popup-overlay");
 const resp = await fetch("../assets/books.json");
 const array = await resp.json();
@@ -138,15 +162,15 @@ function closePopup() {
   popup.classList.remove("active");
 }
 
-btnClose.addEventListener("click", closePopup);
+btnClosePopup.addEventListener("click", closePopup);
 popupOverlay.addEventListener("click", closePopup);
 
 popupOverlay.addEventListener("mouseenter", (event) => {
-  btnClose.classList.add("hover");
+  btnClosePopup.classList.add("hover");
 });
 
 popupOverlay.addEventListener("mouseleave", (event) => {
-  btnClose.classList.remove("hover");
+  btnClosePopup.classList.remove("hover");
 });
 
 //Cart
@@ -190,6 +214,23 @@ booksContainer.addEventListener("click", (event) => {
 });
 
 //Cart window
+const cartWindow = document.createElement("div");
+cartWindow.classList.add("cart-window");
+container.append(cartWindow);
+
+const createBtnCartClose = document.createElement("button");
+createBtnCartClose.classList.add("cart-window_close");
+cartWindow.append(createBtnCartClose);
+
+const cartWindowWrapper = document.createElement("div");
+cartWindowWrapper.classList.add("cart-window_wrapper");
+cartWindow.append(cartWindowWrapper);
+
+const creatBtnConfirm = document.createElement("button");
+creatBtnConfirm.classList.add("confirm");
+creatBtnConfirm.innerText = "Confirm";
+cartWindow.append(creatBtnConfirm);
+
 const cartWrapper = document.querySelector(".cart-window_wrapper");
 
 function openCart() {
@@ -197,19 +238,23 @@ function openCart() {
   cartWindow.classList.add("open_cart");
 }
 
+function renderCart() {
+  let cartDataNew = cart.itemsList; //change structure date for save local storage
+  let result = cartDataNew.reduce((prevValue, currValue) => {
+    const cartWindowBook = new CartWindow(currValue);
+    const template = cartWindowBook.createCartWindowTemplate();
+    return prevValue + template;
+  }, "");
+  if (cartWrapper) {
+    cartWrapper.innerHTML = result;
+  }
+}
+
 basketContainer.addEventListener("click", (event) => {
   const btnBasket = event.target;
   if (btnBasket.classList.contains("basket")) {
     openCart();
-    let cartDataNew = cart.itemsList; //change structure date for save local storage
-    let result = cartDataNew.reduce((prevValue, currValue) => {
-      const cartWindowBook = new CartWindow(currValue);
-      const template = cartWindowBook.createCartWindowTemplate();
-      return prevValue + template;
-    }, "");
-    if (cartWrapper) {
-      cartWrapper.innerHTML = result;
-    }
+    renderCart();
   }
 });
 
@@ -217,6 +262,16 @@ function cloaseCart() {
   body.classList.remove("lock_cart");
   cartWindow.classList.remove("open_cart");
 }
+createBtnCartClose.addEventListener("click", cloaseCart);
+popupOverlay.addEventListener("click", cloaseCart);
+
+popupOverlay.addEventListener("mouseenter", (event) => {
+  createBtnCartClose.classList.add("hover");
+});
+
+popupOverlay.addEventListener("mouseleave", (event) => {
+  createBtnCartClose.classList.remove("hover");
+});
 
 //Drag and drop
 const books = document.querySelectorAll(".book-item");
@@ -267,11 +322,11 @@ cart_window.addEventListener("click", (event) => {
   if (target && target.classList.contains("minus")) {
     let counter = target.nextElementSibling;
     id_book = target.parentElement.id;
-    let delete_book = arrBook[id_book - 1];
-    cart.removeItem(delete_book);
-    update_counter = delete_book.quantity;
+    let remove_book = arrBook[id_book - 1];
+    cart.removeItem(remove_book);
+    update_counter = remove_book.quantity;
     counter.innerHTML = update_counter;
-    update_price = delete_book.price * delete_book.quantity;
+    update_price = remove_book.price * remove_book.quantity;
     price.innerHTML = `${update_price}$`;
   }
   if (target && target.classList.contains("plus")) {
@@ -279,12 +334,23 @@ cart_window.addEventListener("click", (event) => {
     id_book = target.parentElement.id;
     let add_book = arrBook[id_book - 1];
     cart.putItem(add_book);
-    update_counter = add_book.quantity
-    counter.innerHTML = update_counter
+    update_counter = add_book.quantity;
+    counter.innerHTML = update_counter;
     update_price = add_book.price * add_book.quantity;
     price.innerHTML = `${update_price}$`;
   }
   if (target && target.classList.contains("delete")) {
-    console.log("delete")
+    id_book = target.parentElement.id;
+    let delete_book = arrBook[id_book - 1];
+    cart.deleteItem(delete_book);
+    renderCart();
   }
 });
+
+// Confirm button
+cart_window.addEventListener("click", (event) => {
+  let target = event.target
+  if(target && target.classList.contains("confirm")) {
+    window.location.href = "order_page.html";
+  }
+})

@@ -94,6 +94,14 @@ export class Cart {
     return JSON.parse(localStorage.getItem(this.keyName));
   }
 
+  deleteItem(value) {
+    const index = this.itemsList.findIndex((element) => {
+      return element === value
+    })
+    this.itemsList.splice(index, 1);
+    localStorage.setItem(this.keyName, JSON.stringify(this.itemsList))
+  }
+
   // createCartTemplate() {
   //   this.itemsList.forEach((item) => {
   //     console.log(item)
