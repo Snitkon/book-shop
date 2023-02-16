@@ -176,6 +176,23 @@ input { /* 1 */
   overflow: visible;
 }
 
+input {
+  border: none;
+  border-radius: 5px;
+  height: 30px;
+  background: #effafc;
+  color: #585858;
+}
+
+input::placeholder {
+  color: #62cee8;
+  opacity: 0.7;
+}
+
+input:focus {
+  outline: none;
+}
+
 /**
  * Remove the inheritance of text transform in Edge, Firefox, and IE.
  * 1. Remove the inheritance of text transform in Firefox.

@@ -47,7 +47,7 @@ export class CartWindow {
       <button class="minus">&#8722</button>
       <p class="cart-window_quantity">${this.cartData.quantity}</p>
       <button class="plus">&#43</button>
-      <p class="cart-window_price">${this.cartData.price * this.cartData.quantity}$</p>
+      <p class="cart-window_price" id="price${this.cartData.id}">${this.cartData.price * this.cartData.quantity}$</p>
       <button class="delete">&#65794</button>
     </div>
     `;

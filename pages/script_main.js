@@ -220,6 +220,7 @@ container.append(cartWindow);
 
 const createBtnCartClose = document.createElement("button");
 createBtnCartClose.classList.add("cart-window_close");
+createBtnCartClose.innerHTML = "X";
 cartWindow.append(createBtnCartClose);
 
 const cartWindowWrapper = document.createElement("div");
@@ -227,7 +228,7 @@ cartWindowWrapper.classList.add("cart-window_wrapper");
 cartWindow.append(cartWindowWrapper);
 
 const creatBtnConfirm = document.createElement("button");
-creatBtnConfirm.classList.add("confirm");
+creatBtnConfirm.classList.add("btn-confirm");
 creatBtnConfirm.innerText = "Confirm";
 cartWindow.append(creatBtnConfirm);
 
@@ -239,7 +240,7 @@ function openCart() {
 }
 
 function renderCart() {
-  let cartDataNew = cart.itemsList; //change structure date for save local storage
+  let cartDataNew = cart.itemsList;  //change structure date for save local storage
   let result = cartDataNew.reduce((prevValue, currValue) => {
     const cartWindowBook = new CartWindow(currValue);
     const template = cartWindowBook.createCartWindowTemplate();
@@ -314,35 +315,47 @@ function drop(event) {
 const cart_window = document.querySelector(".cart-window");
 
 cart_window.addEventListener("click", (event) => {
-  const price = document.querySelector(".cart-window_price");
   let target = event.target;
-  let update_price;
   let id_book;
+  let update_price;
   let update_counter;
   if (target && target.classList.contains("minus")) {
-    let counter = target.nextElementSibling;
     id_book = target.parentElement.id;
+    let price = document.getElementById(`price${id_book}`);
+    let amountMinus = +amountItems.textContent - 1;
+    let counter = target.nextElementSibling;
     let remove_book = arrBook[id_book - 1];
     cart.removeItem(remove_book);
     update_counter = remove_book.quantity;
     counter.innerHTML = update_counter;
     update_price = remove_book.price * remove_book.quantity;
-    price.innerHTML = `${update_price}$`;
+    price.innerHTML = `${update_price}$`
+    amountItems.innerHTML = amountMinus;
   }
   if (target && target.classList.contains("plus")) {
-    let counter = target.previousElementSibling;
     id_book = target.parentElement.id;
+    let price = document.getElementById(`price${id_book}`);
+    let amountPlus = +amountItems.textContent + 1;
+    let counter = target.previousElementSibling;
     let add_book = arrBook[id_book - 1];
     cart.putItem(add_book);
     update_counter = add_book.quantity;
     counter.innerHTML = update_counter;
     update_price = add_book.price * add_book.quantity;
     price.innerHTML = `${update_price}$`;
+    amountItems.innerHTML = amountPlus;
   }
   if (target && target.classList.contains("delete")) {
     id_book = target.parentElement.id;
+    let amountDelete = 0;
     let delete_book = arrBook[id_book - 1];
     cart.deleteItem(delete_book);
+    let remain_books = cart.getItem();
+    remain_books.forEach((el) => {
+      let quantity = el.quantity;
+      amountDelete += quantity;
+    })
+    amountItems.innerHTML = amountDelete;
     renderCart();
   }
 });
@@ -350,7 +363,7 @@ cart_window.addEventListener("click", (event) => {
 // Confirm button
 cart_window.addEventListener("click", (event) => {
   let target = event.target
-  if(target && target.classList.contains("confirm")) {
+  if(target && target.classList.contains("btn-confirm")) {
     window.location.href = "order_page.html";
   }
 })
