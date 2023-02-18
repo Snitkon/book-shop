@@ -10,6 +10,7 @@ fetch("../assets/books.json")
     console.log(data);
     renderBooks(data);
   });
+
 // Creat Header
 const body = document.body;
 
@@ -227,6 +228,18 @@ const cartWindowWrapper = document.createElement("div");
 cartWindowWrapper.classList.add("cart-window_wrapper");
 cartWindow.append(cartWindowWrapper);
 
+const totalOrderContainer = document.createElement("div");
+totalOrderContainer.classList.add("total-order_container");
+cartWindow.append(totalOrderContainer);
+
+const totalOrder_Items = document.createElement("p");
+totalOrder_Items.classList.add("total-items");
+totalOrderContainer.append(totalOrder_Items);
+
+const totalOrder_Amount = document.createElement("p");
+totalOrder_Amount.classList.add("total-amount");
+totalOrderContainer.append(totalOrder_Amount);
+
 const creatBtnConfirm = document.createElement("button");
 creatBtnConfirm.classList.add("btn-confirm");
 creatBtnConfirm.innerText = "Confirm";
@@ -239,8 +252,27 @@ function openCart() {
   cartWindow.classList.add("open_cart");
 }
 
+function totalOrder() {
+  let cartDataOrder = cart.itemsList;
+  const totalQuantityResult = cartDataOrder.reduce((prevValue, currValue) => {
+    return prevValue + currValue.quantity;
+  }, 0)
+  const totalQuantityPrice = cartDataOrder.reduce((prevValue, currValue) => {
+    return prevValue + (currValue.price * currValue.quantity);
+  }, 0)
+
+  if(totalOrder_Items) {
+    totalOrder_Items.innerHTML = `Total items: ${totalQuantityResult}`;
+  }
+
+  if(totalOrder_Amount) {
+    totalOrder_Amount.innerHTML = `Total amount: ${totalQuantityPrice}$`;
+  }
+}
+
 function renderCart() {
-  let cartDataNew = cart.itemsList;  //change structure date for save local storage
+  let cartDataNew = cart.itemsList;
+  console.log(cartDataNew)  //change structure date for save local storage
   let result = cartDataNew.reduce((prevValue, currValue) => {
     const cartWindowBook = new CartWindow(currValue);
     const template = cartWindowBook.createCartWindowTemplate();
@@ -256,6 +288,7 @@ basketContainer.addEventListener("click", (event) => {
   if (btnBasket.classList.contains("basket")) {
     openCart();
     renderCart();
+    totalOrder();
   }
 });
 
@@ -331,6 +364,8 @@ cart_window.addEventListener("click", (event) => {
     update_price = remove_book.price * remove_book.quantity;
     price.innerHTML = `${update_price}$`
     amountItems.innerHTML = amountMinus;
+    totalOrder();
+
   }
   if (target && target.classList.contains("plus")) {
     id_book = target.parentElement.id;
@@ -344,6 +379,7 @@ cart_window.addEventListener("click", (event) => {
     update_price = add_book.price * add_book.quantity;
     price.innerHTML = `${update_price}$`;
     amountItems.innerHTML = amountPlus;
+    totalOrder();
   }
   if (target && target.classList.contains("delete")) {
     id_book = target.parentElement.id;
@@ -357,6 +393,7 @@ cart_window.addEventListener("click", (event) => {
     })
     amountItems.innerHTML = amountDelete;
     renderCart();
+    totalOrder();
   }
 });
 
