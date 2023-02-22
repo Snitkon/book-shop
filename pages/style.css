@@ -405,8 +405,23 @@
   gap: 15px;
 }
 
+.box-input_container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 150px;
+}
+
 .box-radio_label,
 .box-check_label {
   font-family: "FoglihtenNo06";
   color: #62cee8;
+}
+
+.mistake {
+  border: 2px solid red;
+}
+
+.mistake_container {
+  color: red;
 }

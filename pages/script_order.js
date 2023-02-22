@@ -138,8 +138,10 @@ form_content.innerHTML = renderForm;
 
 const delivery_form = document.forms.delivery_form;
 
+
 delivery_form.addEventListener("change", (event) => {
   const target = event.target;
+
   if (target.type === "checkbox") {
     const divWrapper = target.parentElement;
     const parent = divWrapper.parentElement;
@@ -154,5 +156,27 @@ delivery_form.addEventListener("change", (event) => {
         divEl.firstElementChild.disabled = false;
       }
     });
+  }
+
+  if (target.type === "text" && (target.name === "nameInput" || target.name === "surnameInput")) {
+    const input = target;
+    const name = input.name;
+    const value = input.value;
+    const textMistakeForName = "The field is invalid! At least 4 letters!"
+    const textMistakeForSurname = "The field is invalid! At least 5 letters!"
+    const valueLength = input.value.length;
+    const regularExpressions = /^[a-zA-Z]+$/;
+    const nameCheck = name === "nameInput" && valueLength >= 4 && value.match(regularExpressions)
+    const surnameCheck = name === "surnameInput" && valueLength >= 5 && value.match(regularExpressions)
+    if (!nameCheck && !surnameCheck) {
+      const mistakeContainer = document.createElement("p");
+      mistakeContainer.classList.add("mistake_container");
+      input.classList.add("mistake");
+      input.insertAdjacentElement("afterend", mistakeContainer);
+      mistakeContainer.innerText = name === "nameInput" ? textMistakeForName : textMistakeForSurname;
+    } else {
+      input.nextElementSibling.remove()
+      input.classList.remove("mistake");
+    }
   }
 });
