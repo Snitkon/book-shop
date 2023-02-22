@@ -20,6 +20,7 @@ container.append(logo);
 const titlePage = document.createElement("h1");
 titlePage.classList.add("title");
 titlePage.innerText = "Lukovka Store";
+titlePage.onclick = openMainPage;
 container.append(titlePage);
 
 //Create Main
@@ -42,6 +43,18 @@ main.append(form_container);
 const form_content = document.createElement("div");
 form_content.classList.add("form_content");
 form_container.append(form_content);
+
+const totalOrderContainer = document.createElement("div");
+totalOrderContainer.classList.add("total-order_container");
+info_container.append(totalOrderContainer);
+
+const totalOrder_Items = document.createElement("p");
+totalOrder_Items.classList.add("total-items");
+totalOrderContainer.append(totalOrder_Items);
+
+const totalOrder_Amount = document.createElement("p");
+totalOrder_Amount.classList.add("total-amount");
+totalOrderContainer.append(totalOrder_Amount);
 
 //Create Footer
 const footer = document.createElement("footer");
@@ -76,37 +89,70 @@ footer_location.classList.add("location");
 footer_location.innerText = "828 Broadway, New York, NY 10003";
 footer_info__container.append(footer_location);
 
+function openMainPage() {
+  window.location.href = "index.html";
+}
+
 // Order books
+const cart = new Cart();
+
 function renderOrderList() {
-  let cart = new Cart();
   let cartDataNew = cart.getItem(); //change structure date for save local storage
-  console.log(cartDataNew)
+  console.log(cartDataNew);
   let result = cartDataNew.reduce((prevValue, currValue) => {
     const cartWindowBook = new CartWindow(currValue);
     const template = cartWindowBook.createCartWindowTemplate();
     return prevValue + template;
-}, "");
+  }, "");
   if (info_content) {
     info_content.innerHTML = result;
   }
 }
 
-renderOrderList()
-Form
+function totalOrder() {
+  let cartDataOrder = cart.getItem(); //change structure date for save local storage
+  console.log(cartDataOrder);
+  const totalQuantityResult = cartDataOrder.reduce((prevValue, currValue) => {
+    return prevValue + currValue.quantity;
+  }, 0);
+  const totalQuantityPrice = cartDataOrder.reduce((prevValue, currValue) => {
+    return prevValue + currValue.price * currValue.quantity;
+  }, 0);
+
+  if (totalOrder_Items) {
+    totalOrder_Items.innerHTML = `Total items: ${totalQuantityResult}`;
+  }
+
+  if (totalOrder_Amount) {
+    totalOrder_Amount.innerHTML = `Total amount: ${totalQuantityPrice}$`;
+  }
+}
+
+renderOrderList();
+totalOrder();
+
+// Delivery Forms
 const form = new Form();
-
 const renderForm = form.createFormTemplate();
-
-form_content.innerHTML = renderForm
+form_content.innerHTML = renderForm;
 
 const delivery_form = document.forms.delivery_form;
-const nameInput = delivery_form.nameInput
-const nameInputPlaceholder = nameInput.placeholder;
 
-nameInput.addEventListener("focus", (event) => {
-    nameInput.placeholder = ""
-})
+delivery_form.addEventListener("change", (event) => {
+  const target = event.target;
+  if (target.type === "checkbox") {
+    const divWrapper = target.parentElement;
+    const parent = divWrapper.parentElement;
+    divWrapper.setAttribute("checked", "true");
+    const checkBoxItems = Array.from(parent.children).filter((item) => item.classList.contains("box-check"));
+    const checkedItems = checkBoxItems.filter((item) => item.firstElementChild.checked);
 
-nameInput.addEventListener("blur", (event) => {
-    nameInput.placeholder = nameInputPlaceholder
-})
+    checkBoxItems.forEach((divEl) => {
+      if (checkedItems.length >= 2 && !divEl.firstElementChild.checked) {
+        divEl.firstElementChild.disabled = true;
+      } else if (checkedItems.length < 2 && divEl.firstElementChild.disabled) {
+        divEl.firstElementChild.disabled = false;
+      }
+    });
+  }
+});

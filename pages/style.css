@@ -64,6 +64,7 @@
 .title {
   font-family: "FoglihtenNo06";
   color: #62cee8;
+  cursor: pointer;
 }
 
 .logo {
@@ -402,4 +403,10 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+.box-radio_label,
+.box-check_label {
+  font-family: "FoglihtenNo06";
+  color: #62cee8;
 }
