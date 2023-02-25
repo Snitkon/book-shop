@@ -422,6 +422,11 @@
   border: 2px solid red;
 }
 
-.mistake_container {
+.name-mistake_container,
+.surname-mistake_container,
+.date-mistake_container,
+.street-mistake_container, 
+.house-mistake_container,
+.flat-mistake_container {
   color: red;
 }

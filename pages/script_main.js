@@ -271,8 +271,7 @@ function totalOrder() {
 }
 
 function renderCart() {
-  let cartDataNew = cart.itemsList;
-  console.log(cartDataNew)  //change structure date for save local storage
+  let cartDataNew = cart.itemsList; //change structure date for save local storage
   let result = cartDataNew.reduce((prevValue, currValue) => {
     const cartWindowBook = new CartWindow(currValue);
     const template = cartWindowBook.createCartWindowTemplate();

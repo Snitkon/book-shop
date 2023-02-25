@@ -1,5 +1,5 @@
 import { Cart, CartWindow } from "../modules/cart.js";
-import { Form } from "../modules/form.js";
+import { Form, CustomForm } from "../modules/form.js";
 
 const body = document.body;
 
@@ -135,12 +135,34 @@ totalOrder();
 const form = new Form();
 const renderForm = form.createFormTemplate();
 form_content.innerHTML = renderForm;
+console.log(form);
 
 const delivery_form = document.forms.delivery_form;
+const regularExpressionsLetters = /^[a-zA-ZА-Яа-яЁё]+$/;
+const regularExpressionsNumbersandLetters = /^[a-zA-ZА-Яа-яЁё0-9]+$/;
+const regularExpressionsNumbersWithDash = /(^[1-9])|(^[1-9][0-9]-*[0-9]+$)/;
 
+function reciveFormValue(event) {
+  event.preventDefault();
+
+  const value = {
+    name: delivery_form.nameInput.value,
+    surname: delivery_form.surnameInput.value,
+    date: delivery_form.dateInput.value,
+    street: delivery_form.streetInput.value,
+    house: delivery_form.houseInput.value,
+    flat: delivery_form.flatInput.value
+  };
+
+  const form = new Form(value);
+  const result = form.createOrderInformation()
+  console.log(result)
+
+}
 
 delivery_form.addEventListener("change", (event) => {
   const target = event.target;
+  console.log(form);
 
   if (target.type === "checkbox") {
     const divWrapper = target.parentElement;
@@ -158,25 +180,171 @@ delivery_form.addEventListener("change", (event) => {
     });
   }
 
-  if (target.type === "text" && (target.name === "nameInput" || target.name === "surnameInput")) {
-    const input = target;
-    const name = input.name;
-    const value = input.value;
-    const textMistakeForName = "The field is invalid! At least 4 letters!"
-    const textMistakeForSurname = "The field is invalid! At least 5 letters!"
-    const valueLength = input.value.length;
-    const regularExpressions = /^[a-zA-Z]+$/;
-    const nameCheck = name === "nameInput" && valueLength >= 4 && value.match(regularExpressions)
-    const surnameCheck = name === "surnameInput" && valueLength >= 5 && value.match(regularExpressions)
-    if (!nameCheck && !surnameCheck) {
-      const mistakeContainer = document.createElement("p");
-      mistakeContainer.classList.add("mistake_container");
-      input.classList.add("mistake");
-      input.insertAdjacentElement("afterend", mistakeContainer);
-      mistakeContainer.innerText = name === "nameInput" ? textMistakeForName : textMistakeForSurname;
+  if (target.name === "nameInput") {
+    const nameInput = target;
+    const name = nameInput.name;
+    const value = nameInput.value;
+    const textMistakeForName = "The field is invalid! At least 4 letters!";
+    const valueLength = nameInput.value.length;
+    const nameCheck = name === "nameInput" && valueLength >= 4 && value.match(regularExpressionsLetters);
+    if (!nameCheck) {
+      if (name === "nameInput" && document.querySelector(".name-mistake_container") === null) {
+        const nameMistakeContainer = document.createElement("p");
+        nameMistakeContainer.classList.add("name-mistake_container");
+        nameMistakeContainer.innerText = textMistakeForName;
+        nameInput.insertAdjacentElement("afterend", nameMistakeContainer);
+      }
+      nameInput.classList.add("mistake");
     } else {
-      input.nextElementSibling.remove()
-      input.classList.remove("mistake");
+      if (document.querySelector(".name-mistake_container")) {
+        nameInput.nextElementSibling.remove();
+      }
+      nameInput.classList.remove("mistake");
     }
   }
+
+  if (target.name === "surnameInput") {
+    const surnameInput = target;
+    const name = surnameInput.name;
+    const value = surnameInput.value;
+    const textMistakeForSurname = "The field is invalid! At least 5 letters!";
+    const valueLength = surnameInput.value.length;
+    const surnameCheck = name === "surnameInput" && valueLength >= 5 && value.match(regularExpressionsLetters);
+    if (!surnameCheck) {
+      if (name === "surnameInput" && document.querySelector(".surname-mistake_container") === null) {
+        const surnameMistakeContainer = document.createElement("p");
+        surnameMistakeContainer.classList.add("surname-mistake_container");
+        surnameMistakeContainer.innerText = textMistakeForSurname;
+        surnameInput.insertAdjacentElement("afterend", surnameMistakeContainer);
+      }
+      surnameInput.classList.add("mistake");
+    } else {
+      if (document.querySelector(".surname-mistake_container")) {
+        surnameInput.nextElementSibling.remove();
+      }
+      surnameInput.classList.remove("mistake");
+    }
+  }
+
+  if (target.name === "streetInput") {
+    const streetInput = target;
+    const name = streetInput.name;
+    const value = streetInput.value;
+    const textMistakeForStreet = "The field is invalid! At least 5 symbols!";
+    const valueLength = streetInput.value.length;
+    const streetCheck = name === "streetInput" && valueLength >= 5 && value.match(regularExpressionsNumbersandLetters);
+    if (!streetCheck) {
+      if (name === "streetInput" && document.querySelector(".street-mistake_container") === null) {
+        const streetMistakeContainer = document.createElement("p");
+        streetMistakeContainer.classList.add("street-mistake_container");
+        streetMistakeContainer.innerText = textMistakeForStreet;
+        streetInput.insertAdjacentElement("afterend", streetMistakeContainer);
+      }
+      streetInput.classList.add("mistake");
+    } else {
+      if (document.querySelector(".street-mistake_container")) {
+        streetInput.nextElementSibling.remove();
+      }
+      streetInput.classList.remove("mistake");
+    }
+  }
+
+  if (target.name === "dateInput") {
+    const dateInput = target;
+    const name = dateInput.name;
+    const value = dateInput.value;
+    const textMistakeForDate = "The field is invalid! Not earlier than next day!";
+    let now = new Date();
+    let dateToday = `${now.getFullYear()}-0${now.getMonth() + 1}-${now.getDate()}`;
+    if (value <= dateToday) {
+      if (name === "dateInput" && document.querySelector(".date-mistake_container") === null) {
+        const dataMistakeContainer = document.createElement("p");
+        dataMistakeContainer.classList.add("date-mistake_container");
+        dataMistakeContainer.innerHTML = textMistakeForDate;
+        dateInput.insertAdjacentElement("afterend", dataMistakeContainer);
+      }
+
+      dateInput.classList.add("mistake");
+    } else {
+      if (document.querySelector(".date-mistake_container")) {
+        dateInput.nextElementSibling.remove();
+      }
+
+      dateInput.classList.remove("mistake");
+    }
+  }
+
+  if (target.name === "houseInput") {
+    const houseInput = target;
+    const name = houseInput.name;
+    const value = houseInput.value;
+    console.log(typeof value);
+    const textMistakeForHouse = "The field is invalid! Positive numbers only!";
+    const houseCheck = value >= 1 && +value.split("")[0] >= 1;
+    if (!houseCheck) {
+      if (name === "houseInput" && document.querySelector(".house-mistake_container") === null) {
+        const houseMistakeContainer = document.createElement("p");
+        houseMistakeContainer.classList.add("house-mistake_container");
+        houseMistakeContainer.innerText = textMistakeForHouse;
+        houseInput.insertAdjacentElement("afterend", houseMistakeContainer);
+      }
+      houseInput.classList.add("mistake");
+    } else {
+      if (document.querySelector(".house-mistake_container")) {
+        houseInput.nextElementSibling.remove();
+      }
+      houseInput.classList.remove("mistake");
+    }
+  }
+
+  if (target.name === "flatInput") {
+    const flatInput = target;
+    const name = flatInput.name;
+    const value = flatInput.value;
+    const textMistakeForFlat =
+      "The field is invalid! Positive numbers only! (For example: 1-25 or 25 is valid, but -25 is invalid)";
+    const flatCheck = value.match(regularExpressionsNumbersWithDash);
+    if (!flatCheck) {
+      if (name === "flatInput" && document.querySelector(".flat-mistake_container") === null) {
+        const flatMistakeContainer = document.createElement("p");
+        flatMistakeContainer.classList.add("flat-mistake_container");
+        flatMistakeContainer.innerText = textMistakeForFlat;
+        flatInput.insertAdjacentElement("afterend", flatMistakeContainer);
+      }
+      flatInput.classList.add("mistake");
+    } else {
+      if (document.querySelector(".flat-mistake_container")) {
+        flatInput.nextElementSibling.remove();
+      }
+      flatInput.classList.remove("mistake");
+    }
+  }
+
+  const checkForm = Array.from(delivery_form).filter((el) => el.classList.contains("mistake"));
+  if (checkForm) {
+
+  }
+
+  delivery_form.addEventListener("submit", reciveFormValue);
+});
+
+
+// Custom
+const customForm = new CustomForm();
+const subForm = customForm.createUserInfoSubForm();
+body.insertAdjacentElement('afterbegin', subForm);
+const subFormTwo = customForm.createUserInfoSubFormTwo();
+body.insertAdjacentElement('afterbegin', subFormTwo);
+console.log(subForm);
+console.log(subFormTwo);
+
+document.addEventListener('keydown', () => {
+  console.log(customForm.apartmentInput.value);
+})
+
+customForm.radioBlockOne.addEventListener("focus", (event) => {
+  console.log(event.target.checked);
+});
+customForm.radioBlockOne.addEventListener("click", (event) => {
+  console.log(event);
 });

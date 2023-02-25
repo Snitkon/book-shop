@@ -1,5 +1,6 @@
 export class Form {
   formData;
+  value = "";
 
   constructor(formData) {
     this.formData = formData;
@@ -9,12 +10,12 @@ export class Form {
     return `
         <form class="delivery_form" name="delivery_form">
           <div class="box-input_container">
-            <input class="input_name" type="text" name="nameInput" placeholder="Name" onfocus="this.placeholder=''" onblur="this.placeholder='Name'" autocomplete="off"></input>
-            <input class="input_surname" type="text" name="surnameInput" placeholder="Surname" onfocus="this.placeholder=''" onblur="this.placeholder='Surname'" autocomplete="off"></input>
-            <input class="input_date" type="text" name="dateInput" placeholder="Delivery date" onfocus="this.placeholder=''" onblur="this.placeholder='Delivery date'" autocomplete="off"></input>
-            <input class="input_street" type="text" name="streetInput" placeholder="Street" onfocus="this.placeholder=''" onblur="this.placeholder='Street'" autocomplete="off"></input>
-            <input class="input_house" type="text" name="houseInput" placeholder="House" onfocus="this.placeholder=''" onblur="this.placeholder='House'" autocomplete="off"></input>
-            <input class="input_flat" type="text" name="flatInput" placeholder="Flat" onfocus="this.placeholder=''" onblur="this.placeholder='Flat'" autocomplete="off"></input>
+            <input class="input_name" type="text" name="nameInput" placeholder="Name" onfocus="placeholder=''" onblur="placeholder='Name'" autocomplete="off"></input>
+            <input class="input_surname" type="text" name="surnameInput" placeholder="Surname" onfocus="placeholder=''" onblur="placeholder='Surname'" autocomplete="off"></input>
+            <input class="input_date" type="date" name="dateInput"></input>
+            <input class="input_street" type="text" name="streetInput" placeholder="Street" onfocus="placeholder=''" onblur="placeholder='Street'" autocomplete="off"></input>
+            <input class="input_house" type="text" name="houseInput" placeholder="House" onfocus="placeholder=''" onblur="placeholder='House'" autocomplete="off"></input>
+            <input class="input_flat" type="text" name="flatInput" placeholder="Flat" onfocus="placeholder=''" onblur="placeholder='Flat'" autocomplete="off"></input>
           </div>
           <div class="box-radio_container">
             <label class="box-radio_label">Payment method</label>
@@ -51,5 +52,199 @@ export class Form {
           </div>
         </form>       
         `;
+  }
+
+  createOrderInformation() {
+    return `
+    <div class="container=order">
+      <div class="header-order">
+        <h2 class="header-order_title">The order created!</h2>
+      </div>
+      <div class="main-order">
+        <p class="main-order_deliveryAddress">${(this.formData.street, this.formData.house, this.formData.flat)}</p>
+        <p class="main-order_deliveryCustomer">${(this.formData.name, this.formData.surname)}</p>
+        <p class="main-order_deliveryDate">${this.formData.date}</p>
+      </div>
+      <div class="footer-order">
+        <button class=gooter-order_btnDone>Done</button>
+      </div>
+    </div>
+    `;
+  }
+}
+
+
+
+export class CustomForm {
+  nameInput;
+  surnameInput;
+  dateInput;
+  streetInput;
+  houseInput;
+  apartmentInput;
+  radioBlockOne;
+  radioBlockTwo;
+
+  createForm() {
+    const form = document.createElement("form");
+    form.classList.add("delivery_form");
+  }
+
+  createUserInfoSubForm() {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("box-input_container");
+
+    this.nameInput = new CustomInput({
+      className: "input_name",
+      type: "text",
+      name: "nameInput",
+      placeholder: "Name",
+      autocomplete: "off",
+    }).createInput();
+
+    this.surnameInput = new CustomInput({
+      className: "input_surname",
+      type: "text",
+      name: "surnameInput",
+      placeholder: "Surname",
+      autocomplete: "off",
+    }).createInput();
+
+    this.dateInput = new CustomInput({
+      className: "input_date",
+      type: "date",
+      name: "dateInput",
+    }).createInput();
+
+    this.streetInput = new CustomInput({
+      className: "input_street",
+      type: "text",
+      name: "streetInput",
+      placeholder: "Street",
+      autocomplete: "off",
+    }).createInput();
+
+    this.houseInput = new CustomInput({
+      className: "input_house",
+      type: "text",
+      name: "houseInput",
+      placeholder: "House",
+      autocomplete: "off",
+    }).createInput();
+
+    this.apartmentInput = new CustomInput({
+      className: "input_apartment",
+      type: "text",
+      name: "apartmentInput",
+      placeholder: "Apartment",
+      autocomplete: "off",
+    }).createInput();
+    
+
+    wrapper.insertAdjacentElement("beforeend", this.nameInput);
+    wrapper.insertAdjacentElement("beforeend", this.surnameInput);
+    wrapper.insertAdjacentElement("beforeend", this.dateInput);
+    wrapper.insertAdjacentElement("beforeend", this.streetInput);
+    wrapper.insertAdjacentElement("beforeend", this.houseInput);
+    wrapper.insertAdjacentElement("beforeend", this.apartmentInput);
+    return wrapper;
+  }
+
+  createUserInfoSubFormTwo() {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("box-radio_container");
+
+    const label = document.createElement("label");
+    label.classList.add("box-radio_label");
+    label.innerText = "Payment method";
+    wrapper.insertAdjacentElement("beforeend", label);
+
+    this.radioBlockOne = new CustomRadioInputBlock({
+      checked: "",
+      classNameInput: "cash",
+      labelText: "Cash",
+      classNameLabel: "box-radio_item__label",
+      id: "radio_1",
+      type: "radio",
+      name: "radio",
+      forInput: "radio_1",
+    }).createRadioInputBlock();
+
+    this.radioBlockTwo = new CustomRadioInputBlock({
+      classNameInput: "card",
+      labelText: "Card",
+      classNameLabel: "box-radio_item__label",
+      id: "radio_2",
+      type: "radio",
+      name: "radio",
+      forInput: "radio_2",
+    }).createRadioInputBlock();
+
+    wrapper.insertAdjacentElement("beforeend", this.radioBlockOne);
+    wrapper.insertAdjacentElement("beforeend", this.radioBlockTwo);
+    return wrapper
+  }
+}
+
+export class CustomInput {
+  inputData;
+  inputEl;
+
+  constructor({ className, id, type, name, placeholder, autocomplete, checked }) {
+    this.inputData = { className, id, type, name, placeholder, autocomplete, checked };
+  }
+
+  createInput() {
+    const input = document.createElement("input");
+    const { className, id, type, name, placeholder, autocomplete, checked } = this.inputData;
+    if (className !== undefined) input.classList.add(className);
+    if (id !== undefined) input.setAttribute("id", id);
+    if (type !== undefined) input.setAttribute("type", type);
+    if (name !== undefined) input.setAttribute("name", name);
+    if (placeholder !== undefined) input.setAttribute("placeholder", placeholder);
+    if (autocomplete !== undefined) input.setAttribute("autocomplete", autocomplete);
+    if (checked !== undefined) input.setAttribute("checked", checked);
+    input.addEventListener("focus", () => {
+      this.inputEl.placeholder = "";
+    });
+    input.addEventListener("blur", () => {
+      this.inputEl.placeholder = this.inputData.placeholder;
+    });
+    this.inputEl = input;
+    return this.inputEl;
+  }
+}
+
+export class CustomRadioInputBlock {
+  radioInputData;
+  radioInputBlock;
+
+  constructor({ type, name, id, forInput, classNameInput, classNameLabel, labelText, checked }) {
+    this.radioInputData = { type, name, id, forInput, classNameInput, classNameLabel, labelText, checked };
+  }
+
+  createRadioInputBlock() {
+    const radioWrapper = document.createElement("div");
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+
+    // radioWrapper.insertAdjacentElement("beforeend", label);
+    // radioWrapper.insertAdjacentElement("beforeend", input);
+
+    radioWrapper.appendChild(input);
+    radioWrapper.appendChild(label);
+
+    const { type, name, id, forInput, classNameLabel, classNameInput, labelText, checked } = this.radioInputData;
+    if (classNameInput !== undefined) input.classList.add(classNameInput);
+    if (classNameLabel !== undefined) label.classList.add(classNameLabel);
+    if (id !== undefined) input.setAttribute("id", id);
+    if (type !== undefined) input.setAttribute("type", type);
+    if (name !== undefined) input.setAttribute("name", name);
+    if (forInput !== undefined) label.setAttribute("for", forInput);
+    if (checked !== undefined) input.setAttribute("checked", checked);
+
+    label.innerText = labelText;
+    this.radioInputBlock = radioWrapper;
+    return this.radioInputBlock;
   }
 }
