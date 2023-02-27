@@ -427,6 +427,6 @@
 .date-mistake_container,
 .street-mistake_container, 
 .house-mistake_container,
-.flat-mistake_container {
+.apartment-mistake_container {
   color: red;
 }

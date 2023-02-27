@@ -6,53 +6,53 @@ export class Form {
     this.formData = formData;
   }
 
-  createFormTemplate() {
-    return `
-        <form class="delivery_form" name="delivery_form">
-          <div class="box-input_container">
-            <input class="input_name" type="text" name="nameInput" placeholder="Name" onfocus="placeholder=''" onblur="placeholder='Name'" autocomplete="off"></input>
-            <input class="input_surname" type="text" name="surnameInput" placeholder="Surname" onfocus="placeholder=''" onblur="placeholder='Surname'" autocomplete="off"></input>
-            <input class="input_date" type="date" name="dateInput"></input>
-            <input class="input_street" type="text" name="streetInput" placeholder="Street" onfocus="placeholder=''" onblur="placeholder='Street'" autocomplete="off"></input>
-            <input class="input_house" type="text" name="houseInput" placeholder="House" onfocus="placeholder=''" onblur="placeholder='House'" autocomplete="off"></input>
-            <input class="input_flat" type="text" name="flatInput" placeholder="Flat" onfocus="placeholder=''" onblur="placeholder='Flat'" autocomplete="off"></input>
-          </div>
-          <div class="box-radio_container">
-            <label class="box-radio_label">Payment method</label>
-            <div class="box-radio">
-              <input checked class="cash" id="radio_1" type="radio" name="radio"></input>
-              <label for="radio_1" class="box-radio_item__label">Cash</label>
-            </div>
-            <div class="box_radio">
-              <input class="card" id="radio_2" type="radio" name="radio"></input>
-              <label for="radio_2" class="box-radio_item__label">Card</label>
-            </div>
-          </div>
-          <div class="box-check_container">
-            <label class="box-check_label">Choose 2 gifts(optional):</label>
-            <div class="box-check">
-              <input type="checkbox" name="checkBox" id="check_1"></input>
-              <label for="check_1" class="box-check_item__label">pack as a gift</label>
-            </div>
-            <div class="box-check">
-              <input type="checkbox" name="checkBox" id="check_2"></input>
-              <label for="check_2" class="box-check_item__label">add postcard</label>
-            </div>
-            <div class="box-check">
-              <input type="checkbox" name="checkBox" id="check_3"></input>
-              <label for="check_3" class="box-check_item__label">provide 2% discount to the next time</label>
-            </div>
-            <div class="box-check">
-              <input type="checkbox" name="checkBox" id="check_4"></input>
-              <label for="check_4" class="box-check_item__label">branded pen or pencil</label>
-            </div>
-            <div class="box">
-              <button type="submit" class="box-button">Send</button>
-            </div>
-          </div>
-        </form>       
-        `;
-  }
+  // createFormTemplate() {
+  //   return `
+  //       <form class="delivery_form" name="delivery_form">
+  //         <div class="box-input_container">
+  //           <input class="input_name" type="text" name="nameInput" placeholder="Name" onfocus="placeholder=''" onblur="placeholder='Name'" autocomplete="off"></input>
+  //           <input class="input_surname" type="text" name="surnameInput" placeholder="Surname" onfocus="placeholder=''" onblur="placeholder='Surname'" autocomplete="off"></input>
+  //           <input class="input_date" type="date" name="dateInput"></input>
+  //           <input class="input_street" type="text" name="streetInput" placeholder="Street" onfocus="placeholder=''" onblur="placeholder='Street'" autocomplete="off"></input>
+  //           <input class="input_house" type="text" name="houseInput" placeholder="House" onfocus="placeholder=''" onblur="placeholder='House'" autocomplete="off"></input>
+  //           <input class="input_flat" type="text" name="flatInput" placeholder="Flat" onfocus="placeholder=''" onblur="placeholder='Flat'" autocomplete="off"></input>
+  //         </div>
+  //         <div class="box-radio_container">
+  //           <label class="box-radio_label">Payment method</label>
+  //           <div class="box-radio">
+  //             <input checked class="cash" id="radio_1" type="radio" name="radio"></input>
+  //             <label for="radio_1" class="box-radio_item__label">Cash</label>
+  //           </div>
+  //           <div class="box_radio">
+  //             <input class="card" id="radio_2" type="radio" name="radio"></input>
+  //             <label for="radio_2" class="box-radio_item__label">Card</label>
+  //           </div>
+  //         </div>
+  //         <div class="box-check_container">
+  //           <label class="box-check_label">Choose 2 gifts(optional):</label>
+  //           <div class="box-check">
+  //             <input type="checkbox" name="checkBox" id="check_1"></input>
+  //             <label for="check_1" class="box-check_item__label">pack as a gift</label>
+  //           </div>
+  //           <div class="box-check">
+  //             <input type="checkbox" name="checkBox" id="check_2"></input>
+  //             <label for="check_2" class="box-check_item__label">add postcard</label>
+  //           </div>
+  //           <div class="box-check">
+  //             <input type="checkbox" name="checkBox" id="check_3"></input>
+  //             <label for="check_3" class="box-check_item__label">provide 2% discount to the next time</label>
+  //           </div>
+  //           <div class="box-check">
+  //             <input type="checkbox" name="checkBox" id="check_4"></input>
+  //             <label for="check_4" class="box-check_item__label">branded pen or pencil</label>
+  //           </div>
+  //           <div class="box">
+  //             <button type="submit" class="box-button">Send</button>
+  //           </div>
+  //         </div>
+  //       </form>       
+  //       `;
+  // }
 
   createOrderInformation() {
     return `
@@ -73,8 +73,6 @@ export class Form {
   }
 }
 
-
-
 export class CustomForm {
   nameInput;
   surnameInput;
@@ -88,6 +86,8 @@ export class CustomForm {
   createForm() {
     const form = document.createElement("form");
     form.classList.add("delivery_form");
+    form.setAttribute("name", "delivery_form");
+    return form
   }
 
   createUserInfoSubForm() {
@@ -139,7 +139,6 @@ export class CustomForm {
       placeholder: "Apartment",
       autocomplete: "off",
     }).createInput();
-    
 
     wrapper.insertAdjacentElement("beforeend", this.nameInput);
     wrapper.insertAdjacentElement("beforeend", this.surnameInput);
@@ -182,7 +181,59 @@ export class CustomForm {
 
     wrapper.insertAdjacentElement("beforeend", this.radioBlockOne);
     wrapper.insertAdjacentElement("beforeend", this.radioBlockTwo);
-    return wrapper
+    return wrapper;
+  }
+
+  createUserInfoSubFormThree() {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("box-check_container");
+
+    const label = document.createElement("label");
+    label.classList.add("box-check_label");
+    label.innerText = "Choose 2 gifts(optional):";
+    wrapper.insertAdjacentElement("beforeend", label);
+
+    this.checkBlockOne = new CustomCheckInputBlock({
+      type: "checkbox",
+      name: "checkBox",
+      id: "check_1",
+      for: "check_1",
+      classNameLabel: "box-check_item__label",
+      labelText: "pack as a gift",
+    }).createCheckInputBlock();
+
+    this.checkBlockTwo = new CustomCheckInputBlock({
+      type: "checkbox",
+      name: "checkBox",
+      id: "check_2",
+      for: "check_2",
+      classNameLabel: "box-check_item__label",
+      labelText: "add postcard",
+    }).createCheckInputBlock();
+
+    this.checkBlockThree = new CustomCheckInputBlock({
+      type: "checkbox",
+      name: "checkBox",
+      id: "check_3",
+      for: "check_3",
+      classNameLabel: "box-check_item__label",
+      labelText: "provide 2% discount to the next time",
+    }).createCheckInputBlock();
+
+    this.checkBlockFour = new CustomCheckInputBlock({
+      type: "checkbox",
+      name: "checkBox",
+      id: "check_4",
+      for: "check_4",
+      classNameLabel: "box-check_item__label",
+      labelText: "branded pen or pencil",
+    }).createCheckInputBlock();
+
+    wrapper.insertAdjacentElement("beforeend", this.checkBlockOne);
+    wrapper.insertAdjacentElement("beforeend", this.checkBlockTwo);
+    wrapper.insertAdjacentElement("beforeend", this.checkBlockThree);
+    wrapper.insertAdjacentElement("beforeend", this.checkBlockFour);
+    return wrapper;
   }
 }
 
@@ -246,5 +297,34 @@ export class CustomRadioInputBlock {
     label.innerText = labelText;
     this.radioInputBlock = radioWrapper;
     return this.radioInputBlock;
+  }
+}
+
+export class CustomCheckInputBlock {
+  checkInputData;
+  checkInputBlock;
+
+  constructor({ type, name, id, forInput, classNameLabel, labelText }) {
+    this.checkInputData = { type, name, id, forInput, classNameLabel, labelText };
+  }
+
+  createCheckInputBlock() {
+    const checkWrapper = document.createElement("div");
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+
+    checkWrapper.appendChild(input);
+    checkWrapper.appendChild(label);
+
+    const { type, name, id, forInput, classNameLabel, labelText } = this.checkInputData;
+    if (classNameLabel !== undefined) label.classList.add(classNameLabel);
+    if (id !== undefined) input.setAttribute("id", id);
+    if (type !== undefined) input.setAttribute("type", type);
+    if (name !== undefined) input.setAttribute("name", name);
+    if (forInput !== undefined) label.setAttribute("for", forInput);
+
+    label.innerText = labelText;
+    this.checkInputBlock = checkWrapper;
+    return this.checkInputBlock;
   }
 }

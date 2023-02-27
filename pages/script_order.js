@@ -132,38 +132,58 @@ renderOrderList();
 totalOrder();
 
 // Delivery Forms
-const form = new Form();
-const renderForm = form.createFormTemplate();
-form_content.innerHTML = renderForm;
-console.log(form);
+
+// const form = new Form();
+// const renderForm = form.createFormTemplate();
+// form_content.innerHTML = renderForm;
+const customForm = new CustomForm();
+const form = customForm.createForm();
+console.log(form)
+form_content.insertAdjacentElement("afterbegin", form);
+const subForm = customForm.createUserInfoSubForm();
+form.insertAdjacentElement("beforeend", subForm);
+const subFormTwo = customForm.createUserInfoSubFormTwo();
+form.insertAdjacentElement("beforeend", subFormTwo);
+const subFormThree = customForm.createUserInfoSubFormThree();
+form.insertAdjacentElement("beforeend", subFormThree);
+
+document.addEventListener("keydown", () => {
+  console.log(customForm.apartmentInput.value);
+});
+
+customForm.radioBlockOne.addEventListener("focus", (event) => {
+  console.log(event.target.checked);
+});
+customForm.radioBlockOne.addEventListener("click", (event) => {
+  console.log(event);
+});
 
 const delivery_form = document.forms.delivery_form;
+console.log(delivery_form)
 const regularExpressionsLetters = /^[a-zA-ZА-Яа-яЁё]+$/;
 const regularExpressionsNumbersandLetters = /^[a-zA-ZА-Яа-яЁё0-9]+$/;
 const regularExpressionsNumbersWithDash = /(^[1-9])|(^[1-9][0-9]-*[0-9]+$)/;
 
-function reciveFormValue(event) {
-  event.preventDefault();
+// function reciveFormValue(event) {
+//   event.preventDefault();
 
-  const value = {
-    name: delivery_form.nameInput.value,
-    surname: delivery_form.surnameInput.value,
-    date: delivery_form.dateInput.value,
-    street: delivery_form.streetInput.value,
-    house: delivery_form.houseInput.value,
-    flat: delivery_form.flatInput.value
-  };
+//   const value = {
+//     name: delivery_form.nameInput.value,
+//     surname: delivery_form.surnameInput.value,
+//     date: delivery_form.dateInput.value,
+//     street: delivery_form.streetInput.value,
+//     house: delivery_form.houseInput.value,
+//     flat: delivery_form.flatInput.value
+//   };
 
-  const form = new Form(value);
-  const result = form.createOrderInformation()
-  console.log(result)
+//   const form = new Form(value);
+//   const result = form.createOrderInformation()
+//   console.log(result)
 
-}
+// }
 
 delivery_form.addEventListener("change", (event) => {
   const target = event.target;
-  console.log(form);
-
   if (target.type === "checkbox") {
     const divWrapper = target.parentElement;
     const parent = divWrapper.parentElement;
@@ -297,54 +317,54 @@ delivery_form.addEventListener("change", (event) => {
     }
   }
 
-  if (target.name === "flatInput") {
-    const flatInput = target;
-    const name = flatInput.name;
-    const value = flatInput.value;
-    const textMistakeForFlat =
+  if (target.name === "apartmentInput") {
+    const apartmentInput = target;
+    const name = apartmentInput.name;
+    const value = apartmentInput.value;
+    const textMistakeForApartment =
       "The field is invalid! Positive numbers only! (For example: 1-25 or 25 is valid, but -25 is invalid)";
-    const flatCheck = value.match(regularExpressionsNumbersWithDash);
-    if (!flatCheck) {
-      if (name === "flatInput" && document.querySelector(".flat-mistake_container") === null) {
-        const flatMistakeContainer = document.createElement("p");
-        flatMistakeContainer.classList.add("flat-mistake_container");
-        flatMistakeContainer.innerText = textMistakeForFlat;
-        flatInput.insertAdjacentElement("afterend", flatMistakeContainer);
+    const apartmentCheck = value.match(regularExpressionsNumbersWithDash);
+    if (!apartmentCheck) {
+      if (name === "apartmentInput" && document.querySelector(".apartment-mistake_container") === null) {
+        const apartmentMistakeContainer = document.createElement("p");
+        apartmentMistakeContainer.classList.add("apartment-mistake_container");
+        apartmentMistakeContainer.innerText = textMistakeForApartment;
+        apartmentInput.insertAdjacentElement("afterend", apartmentMistakeContainer);
       }
-      flatInput.classList.add("mistake");
+      apartmentInput.classList.add("mistake");
     } else {
-      if (document.querySelector(".flat-mistake_container")) {
-        flatInput.nextElementSibling.remove();
+      if (document.querySelector(".apartment-mistake_container")) {
+        apartmentInput.nextElementSibling.remove();
       }
-      flatInput.classList.remove("mistake");
+      apartmentInput.classList.remove("mistake");
     }
   }
 
-  const checkForm = Array.from(delivery_form).filter((el) => el.classList.contains("mistake"));
-  if (checkForm) {
+  // const checkForm = Array.from(delivery_form).filter((el) => el.classList.contains("mistake"));
+  // if (checkForm) {
 
-  }
+  // }
 
-  delivery_form.addEventListener("submit", reciveFormValue);
+  // delivery_form.addEventListener("submit", reciveFormValue);
 });
 
 
 // Custom
-const customForm = new CustomForm();
-const subForm = customForm.createUserInfoSubForm();
-body.insertAdjacentElement('afterbegin', subForm);
-const subFormTwo = customForm.createUserInfoSubFormTwo();
-body.insertAdjacentElement('afterbegin', subFormTwo);
-console.log(subForm);
-console.log(subFormTwo);
+// const customForm = new CustomForm();
+// const subForm = customForm.createUserInfoSubForm();
+// body.insertAdjacentElement('beforebegin', subForm);
+// const subFormTwo = customForm.createUserInfoSubFormTwo();
+// body.insertAdjacentElement("beforebegin", subFormTwo);
+// const subFormThree = customForm.createUserInfoSubFormThree();
+// body.insertAdjacentElement("beforebegin", subFormThree);
 
-document.addEventListener('keydown', () => {
-  console.log(customForm.apartmentInput.value);
-})
+// document.addEventListener('keydown', () => {
+//   console.log(customForm.apartmentInput.value);
+// })
 
-customForm.radioBlockOne.addEventListener("focus", (event) => {
-  console.log(event.target.checked);
-});
-customForm.radioBlockOne.addEventListener("click", (event) => {
-  console.log(event);
-});
+// customForm.radioBlockOne.addEventListener("focus", (event) => {
+//   console.log(event.target.checked);
+// });
+// customForm.radioBlockOne.addEventListener("click", (event) => {
+//   console.log(event);
+// });
