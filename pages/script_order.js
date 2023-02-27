@@ -138,7 +138,6 @@ totalOrder();
 // form_content.innerHTML = renderForm;
 const customForm = new CustomForm();
 const form = customForm.createForm();
-console.log(form)
 form_content.insertAdjacentElement("afterbegin", form);
 const subForm = customForm.createUserInfoSubForm();
 form.insertAdjacentElement("beforeend", subForm);
@@ -146,50 +145,57 @@ const subFormTwo = customForm.createUserInfoSubFormTwo();
 form.insertAdjacentElement("beforeend", subFormTwo);
 const subFormThree = customForm.createUserInfoSubFormThree();
 form.insertAdjacentElement("beforeend", subFormThree);
+const sendBtn = customForm.createBtnSend();
+form.insertAdjacentElement("beforeend", sendBtn);
 
-document.addEventListener("keydown", () => {
-  console.log(customForm.apartmentInput.value);
-});
+// document.addEventListener("keydown", () => {
+//   console.log(customForm.apartmentInput.value);
+// });
 
-customForm.radioBlockOne.addEventListener("focus", (event) => {
-  console.log(event.target.checked);
-});
-customForm.radioBlockOne.addEventListener("click", (event) => {
-  console.log(event);
-});
+// customForm.radioBlockOne.addEventListener("focus", (event) => {
+// });
+// customForm.radioBlockOne.addEventListener("click", (event) => {
+// });
 
 const delivery_form = document.forms.delivery_form;
-console.log(delivery_form)
 const regularExpressionsLetters = /^[a-zA-ZА-Яа-яЁё]+$/;
 const regularExpressionsNumbersandLetters = /^[a-zA-ZА-Яа-яЁё0-9]+$/;
 const regularExpressionsNumbersWithDash = /(^[1-9])|(^[1-9][0-9]-*[0-9]+$)/;
 
-// function reciveFormValue(event) {
-//   event.preventDefault();
+function reciveFormValue(event) {
+  event.preventDefault();
 
-//   const value = {
-//     name: delivery_form.nameInput.value,
-//     surname: delivery_form.surnameInput.value,
-//     date: delivery_form.dateInput.value,
-//     street: delivery_form.streetInput.value,
-//     house: delivery_form.houseInput.value,
-//     flat: delivery_form.flatInput.value
-//   };
+  // const value = {
+  //   name: delivery_form.nameInput.value,
+  //   surname: delivery_form.surnameInput.value,
+  //   date: delivery_form.dateInput.value,
+  //   street: delivery_form.streetInput.value,
+  //   house: delivery_form.houseInput.value,
+  //   flat: delivery_form.flatInput.value
+  // };
 
-//   const form = new Form(value);
-//   const result = form.createOrderInformation()
-//   console.log(result)
+  // const form = new Form(value);
+  // const result = form.createOrderInformation()
+  // console.log(result)
 
-// }
+  const orderForm = customForm.createUserOrderForm();
+  console.log(orderForm)
+
+}
 
 delivery_form.addEventListener("change", (event) => {
   const target = event.target;
   if (target.type === "checkbox") {
+    console.log("checkbox")
     const divWrapper = target.parentElement;
     const parent = divWrapper.parentElement;
+    console.log(divWrapper);
+    console.log(parent);
     divWrapper.setAttribute("checked", "true");
     const checkBoxItems = Array.from(parent.children).filter((item) => item.classList.contains("box-check"));
     const checkedItems = checkBoxItems.filter((item) => item.firstElementChild.checked);
+    console.log(checkBoxItems);
+    console.log(checkedItems);
 
     checkBoxItems.forEach((divEl) => {
       if (checkedItems.length >= 2 && !divEl.firstElementChild.checked) {
@@ -345,7 +351,7 @@ delivery_form.addEventListener("change", (event) => {
 
   // }
 
-  // delivery_form.addEventListener("submit", reciveFormValue);
+  delivery_form.addEventListener("submit", reciveFormValue);
 });
 
 

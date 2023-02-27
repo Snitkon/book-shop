@@ -235,6 +235,40 @@ export class CustomForm {
     wrapper.insertAdjacentElement("beforeend", this.checkBlockFour);
     return wrapper;
   }
+
+  createBtnSend() {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("box-btn");
+
+    this.btnSend = new SendBtn({
+      type: "submit",
+      btnText: "Send",
+    }).createSendBtn()
+
+    wrapper.insertAdjacentElement("beforeend", this.btnSend)
+    return wrapper
+  }
+
+  createUserOrderForm() {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("container-order");
+
+    this.userOrderBlock = new CustomOrderInformation({
+      classNameAddress: "main-order_deliveryAddress",
+      classNameCustomer: "main-order_deliveryCustomer",
+      classNameDate: "main-order_deliveryDate",
+      street: this.streetInput.value,
+      house: this.houseInput.value,
+      apartment: this.apartmentInput.value,
+      date: this.dateInput.value,
+      name: this.nameInput.value,
+      surname: this.surnameInput.value
+    }).createOrderInformation();
+
+    wrapper.insertAdjacentElement("beforeend", this.userOrderBlock);
+    return wrapper
+
+  }
 }
 
 export class CustomInput {
@@ -276,6 +310,7 @@ export class CustomRadioInputBlock {
 
   createRadioInputBlock() {
     const radioWrapper = document.createElement("div");
+    radioWrapper.classList.add("box-radio");
     const label = document.createElement("label");
     const input = document.createElement("input");
 
@@ -310,6 +345,7 @@ export class CustomCheckInputBlock {
 
   createCheckInputBlock() {
     const checkWrapper = document.createElement("div");
+    checkWrapper.classList.add("box-check");
     const label = document.createElement("label");
     const input = document.createElement("input");
 
@@ -328,3 +364,69 @@ export class CustomCheckInputBlock {
     return this.checkInputBlock;
   }
 }
+
+export class SendBtn {
+  sendBtnData;
+  sendBtn;
+
+  constructor({ type, btnText }) {
+    this.sendBtnData = { type, btnText };
+  }
+
+  createSendBtn() {
+    const btn = document.createElement("button");
+
+    const {type, btnText} = this.sendBtnData;
+    if (type !== undefined) btn.setAttribute("type", type);
+
+    btn.innerText = btnText
+    this.sendBtn = btn;
+    return this.sendBtn;
+  }
+}
+
+export class CustomOrderInformation {
+  orderData;
+  orderBlock;
+
+  constructor({ street, house, apartment, name, surname, date, classNameAddress, classNameCustomer, classNameDate }) {
+    this.orderData = {street, house, apartment, name, surname, date, classNameAddress, classNameCustomer, classNameDate};
+  }
+
+  createOrderInformation() {
+    const orderWrapper = document.createElement("div");
+    orderWrapper.classList.add("main-order");
+    const deliveryAddressContainer = document.createElement("p");
+    const deliveryCustomerContainer = document.createElement("p");
+    const deliveryDateContainer = document.createElement("p");
+
+    orderWrapper.appendChild(deliveryAddressContainer);
+    orderWrapper.appendChild(deliveryCustomerContainer);
+    orderWrapper.appendChild(deliveryDateContainer);
+
+    const { street, house, apartment, name, surname, date, classNameAddress, classNameCustomer, classNameDate } = this.orderData;
+    if (classNameAddress !== undefined) deliveryAddressContainer.classList.add(classNameAddress);
+    if (classNameCustomer !== undefined) deliveryCustomerContainer.classList.add(classNameCustomer);
+    if (classNameDate !== undefined) deliveryDateContainer.classList.add(classNameDate);
+
+    deliveryAddressContainer.innerText = `The delivery address is ${street} street, house ${house}, apartment ${apartment}.  `;
+    deliveryCustomerContainer.innerText = `Customer: ${name} ${surname}`;
+    deliveryDateContainer.innerText = `Delivery date: ${date}`;
+    this.orderBlock = orderWrapper
+    return this.orderBlock
+  }
+}
+
+    // <div class="container-order">
+    //   <div class="header-order">
+    //     <h2 class="header-order_title">The order created!</h2>
+    //   </div>
+    //   <div class="main-order">
+    //     <p class="main-order_deliveryAddress">${(this.formData.street, this.formData.house, this.formData.apartment)}</p>
+    //     <p class="main-order_deliveryCustomer">${(this.formData.name, this.formData.surname)}</p>
+    //     <p class="main-order_deliveryDate">${this.formData.date}</p>
+    //   </div>
+    //   <div class="footer-order">
+    //     <button class=gooter-order_btnDone>Done</button>
+    //   </div>
+    // </div>
