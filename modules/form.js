@@ -1,78 +1,3 @@
-export class Form {
-  formData;
-  value = "";
-
-  constructor(formData) {
-    this.formData = formData;
-  }
-
-  // createFormTemplate() {
-  //   return `
-  //       <form class="delivery_form" name="delivery_form">
-  //         <div class="box-input_container">
-  //           <input class="input_name" type="text" name="nameInput" placeholder="Name" onfocus="placeholder=''" onblur="placeholder='Name'" autocomplete="off"></input>
-  //           <input class="input_surname" type="text" name="surnameInput" placeholder="Surname" onfocus="placeholder=''" onblur="placeholder='Surname'" autocomplete="off"></input>
-  //           <input class="input_date" type="date" name="dateInput"></input>
-  //           <input class="input_street" type="text" name="streetInput" placeholder="Street" onfocus="placeholder=''" onblur="placeholder='Street'" autocomplete="off"></input>
-  //           <input class="input_house" type="text" name="houseInput" placeholder="House" onfocus="placeholder=''" onblur="placeholder='House'" autocomplete="off"></input>
-  //           <input class="input_flat" type="text" name="flatInput" placeholder="Flat" onfocus="placeholder=''" onblur="placeholder='Flat'" autocomplete="off"></input>
-  //         </div>
-  //         <div class="box-radio_container">
-  //           <label class="box-radio_label">Payment method</label>
-  //           <div class="box-radio">
-  //             <input checked class="cash" id="radio_1" type="radio" name="radio"></input>
-  //             <label for="radio_1" class="box-radio_item__label">Cash</label>
-  //           </div>
-  //           <div class="box_radio">
-  //             <input class="card" id="radio_2" type="radio" name="radio"></input>
-  //             <label for="radio_2" class="box-radio_item__label">Card</label>
-  //           </div>
-  //         </div>
-  //         <div class="box-check_container">
-  //           <label class="box-check_label">Choose 2 gifts(optional):</label>
-  //           <div class="box-check">
-  //             <input type="checkbox" name="checkBox" id="check_1"></input>
-  //             <label for="check_1" class="box-check_item__label">pack as a gift</label>
-  //           </div>
-  //           <div class="box-check">
-  //             <input type="checkbox" name="checkBox" id="check_2"></input>
-  //             <label for="check_2" class="box-check_item__label">add postcard</label>
-  //           </div>
-  //           <div class="box-check">
-  //             <input type="checkbox" name="checkBox" id="check_3"></input>
-  //             <label for="check_3" class="box-check_item__label">provide 2% discount to the next time</label>
-  //           </div>
-  //           <div class="box-check">
-  //             <input type="checkbox" name="checkBox" id="check_4"></input>
-  //             <label for="check_4" class="box-check_item__label">branded pen or pencil</label>
-  //           </div>
-  //           <div class="box">
-  //             <button type="submit" class="box-button">Send</button>
-  //           </div>
-  //         </div>
-  //       </form>       
-  //       `;
-  // }
-
-  createOrderInformation() {
-    return `
-    <div class="container=order">
-      <div class="header-order">
-        <h2 class="header-order_title">The order created!</h2>
-      </div>
-      <div class="main-order">
-        <p class="main-order_deliveryAddress">${(this.formData.street, this.formData.house, this.formData.flat)}</p>
-        <p class="main-order_deliveryCustomer">${(this.formData.name, this.formData.surname)}</p>
-        <p class="main-order_deliveryDate">${this.formData.date}</p>
-      </div>
-      <div class="footer-order">
-        <button class=gooter-order_btnDone>Done</button>
-      </div>
-    </div>
-    `;
-  }
-}
-
 export class CustomForm {
   nameInput;
   surnameInput;
@@ -87,7 +12,7 @@ export class CustomForm {
     const form = document.createElement("form");
     form.classList.add("delivery_form");
     form.setAttribute("name", "delivery_form");
-    return form
+    return form;
   }
 
   createUserInfoSubForm() {
@@ -159,23 +84,24 @@ export class CustomForm {
     wrapper.insertAdjacentElement("beforeend", label);
 
     this.radioBlockOne = new CustomRadioInputBlock({
-      checked: "",
+      value: "cash",
       classNameInput: "cash",
       labelText: "Cash",
       classNameLabel: "box-radio_item__label",
       id: "radio_1",
       type: "radio",
-      name: "radio",
+      name: "radioBtn",
       forInput: "radio_1",
     }).createRadioInputBlock();
 
     this.radioBlockTwo = new CustomRadioInputBlock({
+      value: "card",
       classNameInput: "card",
       labelText: "Card",
       classNameLabel: "box-radio_item__label",
       id: "radio_2",
       type: "radio",
-      name: "radio",
+      name: "radioBtn",
       forInput: "radio_2",
     }).createRadioInputBlock();
 
@@ -190,7 +116,7 @@ export class CustomForm {
 
     const label = document.createElement("label");
     label.classList.add("box-check_label");
-    label.innerText = "Choose 2 gifts(optional):";
+    label.innerText = "Choose 2 gifts (optional):";
     wrapper.insertAdjacentElement("beforeend", label);
 
     this.checkBlockOne = new CustomCheckInputBlock({
@@ -243,15 +169,32 @@ export class CustomForm {
     this.btnSend = new SendBtn({
       type: "submit",
       btnText: "Send",
-    }).createSendBtn()
+      className: "form-btn-send",
+    }).createSendBtn();
 
-    wrapper.insertAdjacentElement("beforeend", this.btnSend)
-    return wrapper
+    wrapper.insertAdjacentElement("beforeend", this.btnSend);
+    return wrapper;
   }
 
   createUserOrderForm() {
     const wrapper = document.createElement("div");
-    wrapper.classList.add("container-order");
+    wrapper.classList.add("order");
+
+    const container = document.createElement("div");
+    container.classList.add("container-order");
+
+    wrapper.insertAdjacentElement("afterbegin", container);
+
+    const headerOrder = document.createElement("div");
+    const orderTitle = document.createElement("h2");
+
+    headerOrder.classList.add("header-order");
+    orderTitle.classList.add("header-order_title");
+
+    orderTitle.innerText = "The order created!";
+
+    container.insertAdjacentElement("afterbegin", headerOrder);
+    headerOrder.insertAdjacentElement("afterbegin", orderTitle);
 
     this.userOrderBlock = new CustomOrderInformation({
       classNameAddress: "main-order_deliveryAddress",
@@ -262,12 +205,12 @@ export class CustomForm {
       apartment: this.apartmentInput.value,
       date: this.dateInput.value,
       name: this.nameInput.value,
-      surname: this.surnameInput.value
+      surname: this.surnameInput.value,
+      action: "index.html",
     }).createOrderInformation();
 
-    wrapper.insertAdjacentElement("beforeend", this.userOrderBlock);
-    return wrapper
-
+    container.insertAdjacentElement("beforeend", this.userOrderBlock);
+    return wrapper;
   }
 }
 
@@ -275,20 +218,19 @@ export class CustomInput {
   inputData;
   inputEl;
 
-  constructor({ className, id, type, name, placeholder, autocomplete, checked }) {
-    this.inputData = { className, id, type, name, placeholder, autocomplete, checked };
+  constructor({ className, id, type, name, placeholder, autocomplete }) {
+    this.inputData = { className, id, type, name, placeholder, autocomplete };
   }
 
   createInput() {
     const input = document.createElement("input");
-    const { className, id, type, name, placeholder, autocomplete, checked } = this.inputData;
+    const { className, id, type, name, placeholder, autocomplete } = this.inputData;
     if (className !== undefined) input.classList.add(className);
     if (id !== undefined) input.setAttribute("id", id);
     if (type !== undefined) input.setAttribute("type", type);
     if (name !== undefined) input.setAttribute("name", name);
     if (placeholder !== undefined) input.setAttribute("placeholder", placeholder);
     if (autocomplete !== undefined) input.setAttribute("autocomplete", autocomplete);
-    if (checked !== undefined) input.setAttribute("checked", checked);
     input.addEventListener("focus", () => {
       this.inputEl.placeholder = "";
     });
@@ -304,8 +246,8 @@ export class CustomRadioInputBlock {
   radioInputData;
   radioInputBlock;
 
-  constructor({ type, name, id, forInput, classNameInput, classNameLabel, labelText, checked }) {
-    this.radioInputData = { type, name, id, forInput, classNameInput, classNameLabel, labelText, checked };
+  constructor({ type, name, id, forInput, classNameInput, classNameLabel, labelText, value }) {
+    this.radioInputData = { type, name, id, forInput, classNameInput, classNameLabel, labelText, value };
   }
 
   createRadioInputBlock() {
@@ -314,20 +256,17 @@ export class CustomRadioInputBlock {
     const label = document.createElement("label");
     const input = document.createElement("input");
 
-    // radioWrapper.insertAdjacentElement("beforeend", label);
-    // radioWrapper.insertAdjacentElement("beforeend", input);
-
     radioWrapper.appendChild(input);
     radioWrapper.appendChild(label);
 
-    const { type, name, id, forInput, classNameLabel, classNameInput, labelText, checked } = this.radioInputData;
+    const { type, name, id, forInput, classNameLabel, classNameInput, labelText, value } = this.radioInputData;
     if (classNameInput !== undefined) input.classList.add(classNameInput);
     if (classNameLabel !== undefined) label.classList.add(classNameLabel);
     if (id !== undefined) input.setAttribute("id", id);
     if (type !== undefined) input.setAttribute("type", type);
     if (name !== undefined) input.setAttribute("name", name);
+    if (value !== undefined) input.setAttribute("value", value);
     if (forInput !== undefined) label.setAttribute("for", forInput);
-    if (checked !== undefined) input.setAttribute("checked", checked);
 
     label.innerText = labelText;
     this.radioInputBlock = radioWrapper;
@@ -369,17 +308,19 @@ export class SendBtn {
   sendBtnData;
   sendBtn;
 
-  constructor({ type, btnText }) {
-    this.sendBtnData = { type, btnText };
+  constructor({ type, btnText, className }) {
+    this.sendBtnData = { type, btnText, className };
   }
 
   createSendBtn() {
     const btn = document.createElement("button");
+    btn.setAttribute("disabled", "true");
 
-    const {type, btnText} = this.sendBtnData;
+    const { type, btnText, className } = this.sendBtnData;
     if (type !== undefined) btn.setAttribute("type", type);
+    if (className !== undefined) btn.classList.add(className);
 
-    btn.innerText = btnText
+    btn.innerText = btnText;
     this.sendBtn = btn;
     return this.sendBtn;
   }
@@ -389,8 +330,19 @@ export class CustomOrderInformation {
   orderData;
   orderBlock;
 
-  constructor({ street, house, apartment, name, surname, date, classNameAddress, classNameCustomer, classNameDate }) {
-    this.orderData = {street, house, apartment, name, surname, date, classNameAddress, classNameCustomer, classNameDate};
+  constructor({ street, house, apartment, name, surname, date, classNameAddress, classNameCustomer, classNameDate, action }) {
+    this.orderData = {
+      street,
+      house,
+      apartment,
+      name,
+      surname,
+      date,
+      classNameAddress,
+      classNameCustomer,
+      classNameDate,
+      action,
+    };
   }
 
   createOrderInformation() {
@@ -399,34 +351,28 @@ export class CustomOrderInformation {
     const deliveryAddressContainer = document.createElement("p");
     const deliveryCustomerContainer = document.createElement("p");
     const deliveryDateContainer = document.createElement("p");
+    const btnForm = document.createElement("form");
+    const btn = document.createElement("button");
+    btn.classList.add("order-btn-done");
+    btn.innerText = "Done";
 
     orderWrapper.appendChild(deliveryAddressContainer);
     orderWrapper.appendChild(deliveryCustomerContainer);
     orderWrapper.appendChild(deliveryDateContainer);
+    orderWrapper.appendChild(btnForm);
+    btnForm.appendChild(btn);
 
-    const { street, house, apartment, name, surname, date, classNameAddress, classNameCustomer, classNameDate } = this.orderData;
+    const { street, house, apartment, name, surname, date, classNameAddress, classNameCustomer, classNameDate, action } =
+      this.orderData;
     if (classNameAddress !== undefined) deliveryAddressContainer.classList.add(classNameAddress);
     if (classNameCustomer !== undefined) deliveryCustomerContainer.classList.add(classNameCustomer);
     if (classNameDate !== undefined) deliveryDateContainer.classList.add(classNameDate);
+    if (action !== undefined) btnForm.setAttribute("action", action);
 
     deliveryAddressContainer.innerText = `The delivery address is ${street} street, house ${house}, apartment ${apartment}.  `;
     deliveryCustomerContainer.innerText = `Customer: ${name} ${surname}`;
     deliveryDateContainer.innerText = `Delivery date: ${date}`;
-    this.orderBlock = orderWrapper
-    return this.orderBlock
+    this.orderBlock = orderWrapper;
+    return this.orderBlock;
   }
 }
-
-    // <div class="container-order">
-    //   <div class="header-order">
-    //     <h2 class="header-order_title">The order created!</h2>
-    //   </div>
-    //   <div class="main-order">
-    //     <p class="main-order_deliveryAddress">${(this.formData.street, this.formData.house, this.formData.apartment)}</p>
-    //     <p class="main-order_deliveryCustomer">${(this.formData.name, this.formData.surname)}</p>
-    //     <p class="main-order_deliveryDate">${this.formData.date}</p>
-    //   </div>
-    //   <div class="footer-order">
-    //     <button class=gooter-order_btnDone>Done</button>
-    //   </div>
-    // </div>

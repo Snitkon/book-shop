@@ -1,33 +1,3 @@
-// export class Cart {
-// //   itemsList = [];
-
-//   constructor() {
-//     this.keyName = "CART"
-//   }
-
-//   getItem() {
-//     const bookLocalStorage = localStorage.getItem(this.keyName);
-//     if(bookLocalStorage !== null) {
-//         return JSON.parse(bookLocalStorage);
-//     }
-//     return [];
-//   }
-
-//   putItem(value) {
-//     let cartBook = this.getItem()
-//     cartBook.push(value);
-//     localStorage.setItem(this.keyName, JSON.stringify(cartBook));
-//   }
-
-//   deleteItem(value) {
-//     const index = this.itemsList.findIndex((element) => {
-//       return element === value;
-//     });
-//     this.itemsList.splice(index, 1);
-//     localStorage.setItem(this.keyName, JSON.stringify(this.itemsList));
-//   }
-// }
-
 export class CartWindow {
   cartData;
 
@@ -101,33 +71,4 @@ export class Cart {
     this.itemsList.splice(index, 1);
     localStorage.setItem(this.keyName, JSON.stringify(this.itemsList))
   }
-
-  // createCartTemplate() {
-  //   this.itemsList.forEach((item) => {
-  //     console.log(item)
-  //     return `
-  //     <div class="cart-window_container">
-  //       <h3 class="cart-window_title">${item.title}</h3>
-  //       <p class="cart-window_description">${item.description}</p>
-  //       <p class="cart-window_quantity">${item.quantity}</p>
-  //     </div>
-  //   `;
-  //   })
-  // }
-
-  // deleteItem(value) {
-  //   const index = this.itemsList.findIndex((element) => {
-  //     return element === value;
-  //   });
-  //   console.log(index)
-  //   localStorage.setItem(this.keyName, JSON.stringify(this.itemsList));
-  // }
-
-  // deleteItem(value) {
-  //   const index = this.itemsList.findIndex((element) => {
-  //     return element === value;
-  //   });
-  //   this.itemsList.splice(index, 1);
-  //   localStorage.setItem(this.keyName, JSON.stringify(this.itemsList));
-  // }
 }

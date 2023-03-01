@@ -1,5 +1,5 @@
 import { Cart, CartWindow } from "../modules/cart.js";
-import { Form, CustomForm } from "../modules/form.js";
+import { CustomForm } from "../modules/form.js";
 
 const body = document.body;
 
@@ -91,6 +91,7 @@ footer_info__container.append(footer_location);
 
 function openMainPage() {
   window.location.href = "index.html";
+  localStorage.clear();
 }
 
 // Order books
@@ -98,7 +99,6 @@ const cart = new Cart();
 
 function renderOrderList() {
   let cartDataNew = cart.getItem(); //change structure date for save local storage
-  console.log(cartDataNew);
   let result = cartDataNew.reduce((prevValue, currValue) => {
     const cartWindowBook = new CartWindow(currValue);
     const template = cartWindowBook.createCartWindowTemplate();
@@ -107,11 +107,12 @@ function renderOrderList() {
   if (info_content) {
     info_content.innerHTML = result;
   }
+  const btnList = info_content.querySelectorAll("button");
+  btnList.forEach((el) => (el.style.display = "none"));
 }
 
 function totalOrder() {
   let cartDataOrder = cart.getItem(); //change structure date for save local storage
-  console.log(cartDataOrder);
   const totalQuantityResult = cartDataOrder.reduce((prevValue, currValue) => {
     return prevValue + currValue.quantity;
   }, 0);
@@ -131,11 +132,8 @@ function totalOrder() {
 renderOrderList();
 totalOrder();
 
-// Delivery Forms
 
-// const form = new Form();
-// const renderForm = form.createFormTemplate();
-// form_content.innerHTML = renderForm;
+// Delivery Forms
 const customForm = new CustomForm();
 const form = customForm.createForm();
 form_content.insertAdjacentElement("afterbegin", form);
@@ -148,55 +146,19 @@ form.insertAdjacentElement("beforeend", subFormThree);
 const sendBtn = customForm.createBtnSend();
 form.insertAdjacentElement("beforeend", sendBtn);
 
-// document.addEventListener("keydown", () => {
-//   console.log(customForm.apartmentInput.value);
-// });
-
-// customForm.radioBlockOne.addEventListener("focus", (event) => {
-// });
-// customForm.radioBlockOne.addEventListener("click", (event) => {
-// });
-
 const delivery_form = document.forms.delivery_form;
 const regularExpressionsLetters = /^[a-zA-ZА-Яа-яЁё]+$/;
 const regularExpressionsNumbersandLetters = /^[a-zA-ZА-Яа-яЁё0-9]+$/;
 const regularExpressionsNumbersWithDash = /(^[1-9])|(^[1-9][0-9]-*[0-9]+$)/;
 
-function reciveFormValue(event) {
-  event.preventDefault();
-
-  // const value = {
-  //   name: delivery_form.nameInput.value,
-  //   surname: delivery_form.surnameInput.value,
-  //   date: delivery_form.dateInput.value,
-  //   street: delivery_form.streetInput.value,
-  //   house: delivery_form.houseInput.value,
-  //   flat: delivery_form.flatInput.value
-  // };
-
-  // const form = new Form(value);
-  // const result = form.createOrderInformation()
-  // console.log(result)
-
-  const orderForm = customForm.createUserOrderForm();
-  console.log(orderForm)
-
-}
-
 delivery_form.addEventListener("change", (event) => {
   const target = event.target;
   if (target.type === "checkbox") {
-    console.log("checkbox")
     const divWrapper = target.parentElement;
     const parent = divWrapper.parentElement;
-    console.log(divWrapper);
-    console.log(parent);
     divWrapper.setAttribute("checked", "true");
     const checkBoxItems = Array.from(parent.children).filter((item) => item.classList.contains("box-check"));
     const checkedItems = checkBoxItems.filter((item) => item.firstElementChild.checked);
-    console.log(checkBoxItems);
-    console.log(checkedItems);
-
     checkBoxItems.forEach((divEl) => {
       if (checkedItems.length >= 2 && !divEl.firstElementChild.checked) {
         divEl.firstElementChild.disabled = true;
@@ -281,7 +243,8 @@ delivery_form.addEventListener("change", (event) => {
     const value = dateInput.value;
     const textMistakeForDate = "The field is invalid! Not earlier than next day!";
     let now = new Date();
-    let dateToday = `${now.getFullYear()}-0${now.getMonth() + 1}-${now.getDate()}`;
+    let day = now.getDate() <= 9 ? `0${now.getDate()}` : `${now.getDate()}`;
+    let dateToday = `${now.getFullYear()}-0${now.getMonth() + 1}-${day}`;
     if (value <= dateToday) {
       if (name === "dateInput" && document.querySelector(".date-mistake_container") === null) {
         const dataMistakeContainer = document.createElement("p");
@@ -304,7 +267,6 @@ delivery_form.addEventListener("change", (event) => {
     const houseInput = target;
     const name = houseInput.name;
     const value = houseInput.value;
-    console.log(typeof value);
     const textMistakeForHouse = "The field is invalid! Positive numbers only!";
     const houseCheck = value >= 1 && +value.split("")[0] >= 1;
     if (!houseCheck) {
@@ -346,31 +308,45 @@ delivery_form.addEventListener("change", (event) => {
     }
   }
 
-  // const checkForm = Array.from(delivery_form).filter((el) => el.classList.contains("mistake"));
-  // if (checkForm) {
+  if (target.name === "radioBtn") {
+    const allRadioBtn = delivery_form.radioBtn;
+    const checked = target.checked;
+    const value = target.value;
+    if (value === "cash") {
+      allRadioBtn[0].setAttribute("checked", checked);
+      allRadioBtn[1].removeAttribute("checked");
+    }
+    if (value === "card") {
+      allRadioBtn[1].setAttribute("checked", checked);
+      allRadioBtn[0].removeAttribute("checked");
+    }
+  }
 
-  // }
+  const checkMistakeForm = Array.from(delivery_form).filter((el) => el.classList.contains("mistake"));
+  const checkRadioForm = Array.from(delivery_form.radioBtn).filter((el) => el.getAttribute("checked"));
+  const quantityRadioChecked = checkRadioForm.length;
+  const quantityMistakeForm = checkMistakeForm.length;
+  const sendButton = sendBtn.firstElementChild;
+  const checkValueForm = Array.from(delivery_form).filter((el, index) => {
+    if (index < 6 && el.value != "") {
+      return el;
+    }
+  });
+  const quantityValueForm = checkValueForm.length;
+  if (quantityMistakeForm == 0 && quantityValueForm == 6 && quantityRadioChecked == 1) {
+    sendButton.removeAttribute("disabled");
+  } else {
+    sendButton.setAttribute("disabled", "true");
+  }
 
-  delivery_form.addEventListener("submit", reciveFormValue);
+  
 });
+function reciveFormValue(event) {
+  event.preventDefault();
 
-
-// Custom
-// const customForm = new CustomForm();
-// const subForm = customForm.createUserInfoSubForm();
-// body.insertAdjacentElement('beforebegin', subForm);
-// const subFormTwo = customForm.createUserInfoSubFormTwo();
-// body.insertAdjacentElement("beforebegin", subFormTwo);
-// const subFormThree = customForm.createUserInfoSubFormThree();
-// body.insertAdjacentElement("beforebegin", subFormThree);
-
-// document.addEventListener('keydown', () => {
-//   console.log(customForm.apartmentInput.value);
-// })
-
-// customForm.radioBlockOne.addEventListener("focus", (event) => {
-//   console.log(event.target.checked);
-// });
-// customForm.radioBlockOne.addEventListener("click", (event) => {
-//   console.log(event);
-// });
+  const orderForm = customForm.createUserOrderForm();
+  main.insertAdjacentElement("beforeend", orderForm);
+  body.style.overflow = "hidden";
+  localStorage.clear()
+}
+delivery_form.addEventListener("submit", reciveFormValue);

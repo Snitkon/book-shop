@@ -43,16 +43,12 @@ basketContainer.append(basket);
 
 const amount = document.createElement("span");
 amount.classList.add("amount");
+amount.innerText = "0"
 basketContainer.append(amount);
 
 const postContainer = document.createElement("div");
 postContainer.classList.add("postContainer");
 header.append(postContainer);
-
-const poster = document.createElement("img");
-poster.src = "../assets/images/shelfs.jpeg";
-poster.classList.add("poster");
-postContainer.append(poster);
 
 // Creat Main
 const main = document.createElement("main");
@@ -81,11 +77,11 @@ footer.classList.add("footer");
 body.append(footer);
 
 const footer_container = document.createElement("div");
-footer_container.classList.add('footer_container');
+footer_container.classList.add("footer_container");
 footer.append(footer_container);
 
 const footer_title = document.createElement("h2");
-footer_title.innerText = "Contact info"
+footer_title.innerText = "Contact info";
 footer_title.classList.add("footer_title");
 footer_container.append(footer_title);
 
@@ -96,17 +92,17 @@ footer_container.append(footer_info__container);
 const footer_email = document.createElement("p");
 footer_email.innerText = "lukovka_store@yahoo.com";
 footer_email.classList.add("email");
-footer_info__container.append(footer_email)
+footer_info__container.append(footer_email);
 
 const footer_phone = document.createElement("p");
 footer_phone.innerText = "+1 212-473-1355";
-footer_info__container.append(footer_phone)
+footer_info__container.append(footer_phone);
 footer_phone.classList.add("phone");
 
 const footer_location = document.createElement("p");
 footer_location.classList.add("location");
-footer_location.innerText = "828 Broadway, New York, NY 10003"
-footer_info__container.append(footer_location)
+footer_location.innerText = "828 Broadway, New York, NY 10003";
+footer_info__container.append(footer_location);
 
 // Book card popup
 const createPopupOverlay = document.createElement("div");
@@ -119,6 +115,7 @@ body.append(createPopup);
 
 const createBtnPopupClose = document.createElement("button");
 createBtnPopupClose.classList.add("popup-close");
+createBtnPopupClose.innerHTML = "X";
 createPopup.append(createBtnPopupClose);
 
 const createPopupWrapper = document.createElement("div");
@@ -149,7 +146,7 @@ booksContainer.addEventListener("click", (event) => {
     });
     const pagePopup = `
     <div class="popup-container">
-      <h3 class="popup-title">${bookInfo.title}</h3>
+      <h2 class="popup-title">${bookInfo.title}</h2>
       <p class="popup-description">${bookInfo.description}</p>
     </div>
 `;
@@ -176,10 +173,6 @@ popupOverlay.addEventListener("mouseleave", (event) => {
 
 //Cart
 const cart = new Cart();
-const amountItems = document.querySelector(".amount");
-const labelAdd = "Add to Cart";
-const labelRemove = "Remove from trash";
-amountItems.innerText = "0";
 
 // booksContainer.addEventListener('click', (event) => {
 //   const btn = event.target;
@@ -210,7 +203,7 @@ booksContainer.addEventListener("click", (event) => {
     cart.itemsList.forEach((item) => {
       count += item.quantity;
     });
-    amountItems.innerHTML = count.toString();
+    totalOrder();
   }
 });
 
@@ -253,25 +246,30 @@ function openCart() {
 }
 
 function totalOrder() {
-  let cartDataOrder = cart.itemsList;
-  const totalQuantityResult = cartDataOrder.reduce((prevValue, currValue) => {
-    return prevValue + currValue.quantity;
-  }, 0)
-  const totalQuantityPrice = cartDataOrder.reduce((prevValue, currValue) => {
-    return prevValue + (currValue.price * currValue.quantity);
-  }, 0)
-
-  if(totalOrder_Items) {
+  let cartDataOrder = cart.getItem();
+  const btn = cartWindow.querySelector(".btn-confirm");
+  if (cartDataOrder === null || cartDataOrder.length === 0) {
+    totalOrder_Items.innerHTML = "Total items: 0";
+    totalOrder_Amount.innerHTML = "Total amount: 0";
+    amount.innerText = "0";
+    btn.setAttribute("disabled", "true");
+  } else {
+    const totalQuantityResult = cartDataOrder.reduce((prevValue, currValue) => {
+      return prevValue + currValue.quantity;
+    }, 0);
+    const totalQuantityPrice = cartDataOrder.reduce((prevValue, currValue) => {
+      return prevValue + currValue.price * currValue.quantity;
+    }, 0);
     totalOrder_Items.innerHTML = `Total items: ${totalQuantityResult}`;
-  }
-
-  if(totalOrder_Amount) {
     totalOrder_Amount.innerHTML = `Total amount: ${totalQuantityPrice}$`;
+    amount.innerText = `${totalQuantityResult}`;
+    btn.removeAttribute("disabled");
   }
 }
 
 function renderCart() {
-  let cartDataNew = cart.itemsList; //change structure date for save local storage
+  let cartDataNew = cart.getItem(); //change structure date for save local storage
+  if (cartDataNew === null) return;
   let result = cartDataNew.reduce((prevValue, currValue) => {
     const cartWindowBook = new CartWindow(currValue);
     const template = cartWindowBook.createCartWindowTemplate();
@@ -340,7 +338,7 @@ function drop(event) {
   cart.itemsList.forEach((item) => {
     count += item.quantity;
   });
-  amountItems.innerHTML = count.toString();
+    totalOrder();
 }
 
 // Minus button and plus button
@@ -354,22 +352,27 @@ cart_window.addEventListener("click", (event) => {
   if (target && target.classList.contains("minus")) {
     id_book = target.parentElement.id;
     let price = document.getElementById(`price${id_book}`);
-    let amountMinus = +amountItems.textContent - 1;
+    // let amountMinus = +amountItems.textContent - 1;
     let counter = target.nextElementSibling;
     let remove_book = arrBook[id_book - 1];
-    cart.removeItem(remove_book);
+    if (remove_book.quantity === 1 ) {
+      cart.deleteItem(remove_book)
+      renderCart();
+    } else {
+      cart.removeItem(remove_book);
+
+    }
     update_counter = remove_book.quantity;
     counter.innerHTML = update_counter;
     update_price = remove_book.price * remove_book.quantity;
-    price.innerHTML = `${update_price}$`
-    amountItems.innerHTML = amountMinus;
+    price.innerHTML = `${update_price}$`;
+    // amountItems.innerHTML = amountMinus;
     totalOrder();
-
   }
   if (target && target.classList.contains("plus")) {
     id_book = target.parentElement.id;
     let price = document.getElementById(`price${id_book}`);
-    let amountPlus = +amountItems.textContent + 1;
+    // let amountPlus = +amountItems.textContent + 1;
     let counter = target.previousElementSibling;
     let add_book = arrBook[id_book - 1];
     cart.putItem(add_book);
@@ -377,7 +380,7 @@ cart_window.addEventListener("click", (event) => {
     counter.innerHTML = update_counter;
     update_price = add_book.price * add_book.quantity;
     price.innerHTML = `${update_price}$`;
-    amountItems.innerHTML = amountPlus;
+    // amountItems.innerHTML = amountPlus;
     totalOrder();
   }
   if (target && target.classList.contains("delete")) {
@@ -389,8 +392,8 @@ cart_window.addEventListener("click", (event) => {
     remain_books.forEach((el) => {
       let quantity = el.quantity;
       amountDelete += quantity;
-    })
-    amountItems.innerHTML = amountDelete;
+    });
+    // amountItems.innerHTML = amountDelete;
     renderCart();
     totalOrder();
   }
@@ -398,8 +401,8 @@ cart_window.addEventListener("click", (event) => {
 
 // Confirm button
 cart_window.addEventListener("click", (event) => {
-  let target = event.target
-  if(target && target.classList.contains("btn-confirm")) {
+  let target = event.target;
+  if (target && target.classList.contains("btn-confirm")) {
     window.location.href = "order_page.html";
   }
-})
+});
