@@ -128,7 +128,7 @@
 }
 
 .cart-window_wrapper {
-  height: 500px;
+  max-height: 500px;
   overflow: scroll;
 }
 
@@ -453,7 +453,7 @@
 }
 
 .info_content {
-  height: 500px;
+  max-height: 500px;
   width: 800px;
   overflow: scroll;
   margin: 0 auto;
@@ -480,6 +480,10 @@
   width: 150px;
 }
 
+.box-radio_container {
+  width: 160px;
+}
+
 .box-radio,
 .box-check {
   display: flex;
@@ -502,7 +506,8 @@
 .date-mistake_container,
 .street-mistake_container,
 .house-mistake_container,
-.apartment-mistake_container {
+.apartment-mistake_container,
+.paymant-mistake_container {
   color: red;
 }
 

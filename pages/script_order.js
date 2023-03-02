@@ -132,7 +132,6 @@ function totalOrder() {
 renderOrderList();
 totalOrder();
 
-
 // Delivery Forms
 const customForm = new CustomForm();
 const form = customForm.createForm();
@@ -310,21 +309,22 @@ delivery_form.addEventListener("change", (event) => {
 
   if (target.name === "radioBtn") {
     const radio_block = document.querySelector(".box-radio_container");
+    const mistakeBlock = document.querySelector(".paymant-mistake_container");
     const allRadioBtn = delivery_form.radioBtn;
     const checked = target.checked;
     const value = target.value;
     if (value === "cash") {
       allRadioBtn[0].setAttribute("checked", checked);
       allRadioBtn[1].removeAttribute("checked");
-      radio_block.classList.remove("mistake")
+      radio_block.classList.remove("mistake");
+      radio_block.removeChild(mistakeBlock);
     }
     if (value === "card") {
       allRadioBtn[1].setAttribute("checked", checked);
-      allRadioBtn[0].removeAttribute("checked")
+      allRadioBtn[0].removeAttribute("checked");
       radio_block.classList.remove("mistake");
-
+      radio_block.removeChild(mistakeBlock)
     }
-    
   }
 
   const checkMistakeForm = Array.from(delivery_form).filter((el) => el.classList.contains("mistake"));
@@ -351,19 +351,22 @@ function reciveFormValue(event) {
   const orderForm = customForm.createUserOrderForm();
   main.insertAdjacentElement("beforeend", orderForm);
   body.style.overflow = "hidden";
-  localStorage.clear()
+  localStorage.clear();
 }
 
 delivery_form.addEventListener("submit", reciveFormValue);
 
 delivery_form.addEventListener("click", (event) => {
   const target = event.target;
-  const parent = target.parentElement
+  const parent = target.parentElement;
+  const textMistakeForPaymant = "The field is invalid! Select type of payment!";
   if (parent.classList.contains("box-radio_container")) {
-      if (!delivery_form.radioBtn.value) {
-        parent.classList.add("mistake")
-      } else {
-        parent.classList.remove("mistake");
-      }
+    if (!delivery_form.radioBtn.value) {
+      parent.classList.add("mistake");
+      const PaymantMistakeContainer = document.createElement("p");
+      PaymantMistakeContainer.classList.add("paymant-mistake_container");
+      PaymantMistakeContainer.innerText = textMistakeForPaymant;
+      parent.insertAdjacentElement("beforeend", PaymantMistakeContainer);
     }
-})
+  }
+});
