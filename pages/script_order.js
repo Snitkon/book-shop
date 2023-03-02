@@ -309,17 +309,22 @@ delivery_form.addEventListener("change", (event) => {
   }
 
   if (target.name === "radioBtn") {
+    const radio_block = document.querySelector(".box-radio_container");
     const allRadioBtn = delivery_form.radioBtn;
     const checked = target.checked;
     const value = target.value;
     if (value === "cash") {
       allRadioBtn[0].setAttribute("checked", checked);
       allRadioBtn[1].removeAttribute("checked");
+      radio_block.classList.remove("mistake")
     }
     if (value === "card") {
       allRadioBtn[1].setAttribute("checked", checked);
-      allRadioBtn[0].removeAttribute("checked");
+      allRadioBtn[0].removeAttribute("checked")
+      radio_block.classList.remove("mistake");
+
     }
+    
   }
 
   const checkMistakeForm = Array.from(delivery_form).filter((el) => el.classList.contains("mistake"));
@@ -338,9 +343,8 @@ delivery_form.addEventListener("change", (event) => {
   } else {
     sendButton.setAttribute("disabled", "true");
   }
-
-  
 });
+
 function reciveFormValue(event) {
   event.preventDefault();
 
@@ -349,4 +353,17 @@ function reciveFormValue(event) {
   body.style.overflow = "hidden";
   localStorage.clear()
 }
+
 delivery_form.addEventListener("submit", reciveFormValue);
+
+delivery_form.addEventListener("click", (event) => {
+  const target = event.target;
+  const parent = target.parentElement
+  if (parent.classList.contains("box-radio_container")) {
+      if (!delivery_form.radioBtn.value) {
+        parent.classList.add("mistake")
+      } else {
+        parent.classList.remove("mistake");
+      }
+    }
+})

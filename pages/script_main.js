@@ -174,25 +174,6 @@ popupOverlay.addEventListener("mouseleave", (event) => {
 //Cart
 const cart = new Cart();
 
-// booksContainer.addEventListener('click', (event) => {
-//   const btn = event.target;
-//     if (btn && btn.classList.contains("book-btn-add")) {
-//       const id = btn.parentElement.getAttribute("id");
-//       if (cart.itemsList.includes(id)) {
-//         cart.deleteItem(id);
-//         btn.innerText = labelAdd;
-//         btn.classList.remove("book-btn-add_active");
-//       } else if (cart.itemsList.length >= 7) {
-//         return alert("Sorry, the basket is full");
-//       } else {
-//         cart.putItem(id);
-//         btn.classList.toggle("book-btn-add_active");
-//         btn.innerText = labelRemove;
-//       }
-//       amountItems.innerText = cart.itemsList.length.toString();
-//     }
-// });
-
 booksContainer.addEventListener("click", (event) => {
   const btn = event.target;
   if (btn && btn.classList.contains("book-btn-add")) {

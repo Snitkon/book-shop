@@ -88,20 +88,29 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  gap: 5px;
+  gap: 8px;
 }
 
 /* Cart window */
 .cart-window {
+  display: block;
   width: 900px;
   border-radius: 15px;
   background-color: #c3eff7;
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 10%;
   z-index: 2;
-  display: none;
+  right: -100%;
+  transition: all 0.5s ease;
+}
+
+.open_cart {
+  right: 100px;
+  transition: all 0.5s ease;
+}
+
+.lock_cart {
+  overflow: hidden;
 }
 
 .cart-window_container {
@@ -116,6 +125,11 @@
   min-height: 150px;
   background: rgba(250, 250, 250, 1);
   border-radius: 10px;
+}
+
+.cart-window_wrapper {
+  height: 500px;
+  overflow: scroll;
 }
 
 .cart-window_author {
@@ -168,14 +182,6 @@
   width: 250px;
 }
 
-.open_cart {
-  display: block;
-}
-
-.lock_cart {
-  overflow: hidden;
-}
-
 .minus {
   width: 21px;
   height: 20px;
@@ -221,6 +227,7 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 2px 2px 2px 1px #c0e4ec;
+  transition: 0.5s;
 }
 
 .book-item:hover {
@@ -278,9 +285,9 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: 0.5s all;
   z-index: 2;
-  display: none;
 }
 
 .popup-close {
@@ -307,8 +314,43 @@
   border-radius: 10px;
 }
 
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(41, 41, 41, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.5s all;
+}
+
 .popup-overlay:hover {
   cursor: pointer;
+}
+
+.lock {
+  overflow: hidden;
+}
+
+.active {
+  transform: translate(-50%, -50%) scale(1);
+  transition: 0.5s all;
+  display: block;
+}
+
+._active {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(41, 41, 41, 0.6);
+  z-index: 1;
+  opacity: 1;
+  pointer-events: all;
+  transition: 0.5s all;
 }
 
 .popup-title {
@@ -358,24 +400,6 @@
   font-weight: 400;
   line-height: 17px;
   letter-spacing: 0.06em;
-}
-
-.lock {
-  overflow: hidden;
-}
-
-.active {
-  display: block;
-}
-
-._active {
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba(41, 41, 41, 0.6);
-  z-index: 1;
 }
 
 /* Footer */
@@ -429,6 +453,9 @@
 }
 
 .info_content {
+  height: 500px;
+  width: 800px;
+  overflow: scroll;
   margin: 0 auto;
 }
 
@@ -505,7 +532,6 @@
   z-index: 1;
   border-radius: 20px;
   box-shadow: 2px 2px 10px black;
-  /* position: absolute; */
 }
 
 .header-order_title {
